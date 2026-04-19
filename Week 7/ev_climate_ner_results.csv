@@ -1,0 +1,233 @@
+article_id,entity,label,description
+1,EDITORIAL UPDATE,PERSON,"People, including fictional"
+1,11 13 25,DATE,Absolute or relative dates or periods
+1,EV,ORG,"Companies, agencies, institutions, etc."
+1,US,GPE,"Countries, cities, states"
+1,100 mile,QUANTITY,"Measurements, as of weight or distance"
+1,one,CARDINAL,Numerals that do not fall under another type
+1,Transportation,ORG,"Companies, agencies, institutions, etc."
+1,100,CARDINAL,Numerals that do not fall under another type
+1,first,ORDINAL,"""first"", ""second"", etc."
+1,only 45 percent,PERCENT,"Percentage, including ""%"""
+1,50,CARDINAL,Numerals that do not fall under another type
+1,MPG,ORG,"Companies, agencies, institutions, etc."
+1,97 percent,PERCENT,"Percentage, including ""%"""
+1,57,CARDINAL,Numerals that do not fall under another type
+1,earlier this year,DATE,Absolute or relative dates or periods
+1,2023,DATE,Absolute or relative dates or periods
+1,EV,FAC,"Buildings, airports, highways, bridges, etc."
+1,NY,GPE,"Countries, cities, states"
+1,354,CARDINAL,Numerals that do not fall under another type
+1,less than 7 percent,PERCENT,"Percentage, including ""%"""
+1,Texas,GPE,"Countries, cities, states"
+1,83,CARDINAL,Numerals that do not fall under another type
+1,60,CARDINAL,Numerals that do not fall under another type
+1,less than half,CARDINAL,Numerals that do not fall under another type
+1,today,DATE,Absolute or relative dates or periods
+1,2,CARDINAL,Numerals that do not fall under another type
+1,29,CARDINAL,Numerals that do not fall under another type
+1,300-mile,QUANTITY,"Measurements, as of weight or distance"
+1,58 percent,PERCENT,"Percentage, including ""%"""
+1,57 percent,PERCENT,"Percentage, including ""%"""
+1,breakeven,NORP,Nationalities or religious or political groups
+1,breakeven,GPE,"Countries, cities, states"
+1,"about 18,000 miles",QUANTITY,"Measurements, as of weight or distance"
+1,less than 2 years,DATE,Absolute or relative dates or periods
+1,annual,DATE,Absolute or relative dates or periods
+1,"about 17,700 miles",QUANTITY,"Measurements, as of weight or distance"
+1,"150,000 miles",QUANTITY,"Measurements, as of weight or distance"
+1,34 metric tons,QUANTITY,"Measurements, as of weight or distance"
+1,48 metric tons,QUANTITY,"Measurements, as of weight or distance"
+1,"less than 18,000 miles",QUANTITY,"Measurements, as of weight or distance"
+1,more than 4 miles,QUANTITY,"Measurements, as of weight or distance"
+1,one kilowatt-hour,QUANTITY,"Measurements, as of weight or distance"
+1,less than 2 miles,QUANTITY,"Measurements, as of weight or distance"
+1,Florida,GPE,"Countries, cities, states"
+1,82,CARDINAL,Numerals that do not fall under another type
+1,the Lucid Air,ORG,"Companies, agencies, institutions, etc."
+1,115,CARDINAL,Numerals that do not fall under another type
+1,2025,DATE,Absolute or relative dates or periods
+1,Lucid Air,ORG,"Companies, agencies, institutions, etc."
+1,Toyota,ORG,"Companies, agencies, institutions, etc."
+1,37,CARDINAL,Numerals that do not fall under another type
+1,UCS,ORG,"Companies, agencies, institutions, etc."
+1,2012,DATE,Absolute or relative dates or periods
+1,only 45,CARDINAL,Numerals that do not fall under another type
+1,97,CARDINAL,Numerals that do not fall under another type
+1,2022,DATE,Absolute or relative dates or periods
+1,Driving Cleaner,PERSON,"People, including fictional"
+2,EV,ORG,"Companies, agencies, institutions, etc."
+2,Myth 1 Electric,ORG,"Companies, agencies, institutions, etc."
+2,FACT Electric,ORG,"Companies, agencies, institutions, etc."
+2,2020,DATE,Absolute or relative dates or periods
+2,second,ORDINAL,"""first"", ""second"", etc."
+2,U.S.,GPE,"Countries, cities, states"
+2,EPA,ORG,"Companies, agencies, institutions, etc."
+2,about 16 25,CARDINAL,Numerals that do not fall under another type
+2,Department of Energy's,ORG,"Companies, agencies, institutions, etc."
+2,PHEV,ORG,"Companies, agencies, institutions, etc."
+2,Myth 2 Electric,ORG,"Companies, agencies, institutions, etc."
+2,GHG,ORG,"Companies, agencies, institutions, etc."
+2,zero,CARDINAL,Numerals that do not fall under another type
+2,Myth 1,LAW,Named documents made into laws.
+2,Argonne National Laboratory,ORG,"Companies, agencies, institutions, etc."
+2,300-mile,QUANTITY,"Measurements, as of weight or distance"
+2,2 2021,DATE,Absolute or relative dates or periods
+2,model year 2020,DATE,Absolute or relative dates or periods
+2,today,DATE,Absolute or relative dates or periods
+2,U.S. Department of Energy s ReCell Center National Blueprint for Lithium Batteries,ORG,"Companies, agencies, institutions, etc."
+2,2021-2030,DATE,Absolute or relative dates or periods
+2,1.6,CARDINAL,Numerals that do not fall under another type
+2,June 2021,DATE,Absolute or relative dates or periods
+2,the Federal Consortium for Advanced Batteries,ORG,"Companies, agencies, institutions, etc."
+2,every few years,DATE,Absolute or relative dates or periods
+2,"about 15,000",CARDINAL,Numerals that do not fall under another type
+2,model year 2023,DATE,Absolute or relative dates or periods
+2,2.5,CARDINAL,Numerals that do not fall under another type
+2,2010,DATE,Absolute or relative dates or periods
+2,first,ORDINAL,"""first"", ""second"", etc."
+2,model year 2016,DATE,Absolute or relative dates or periods
+2,less than a,CARDINAL,Numerals that do not fall under another type
+2,0.5,CARDINAL,Numerals that do not fall under another type
+2,Recurrent,ORG,"Companies, agencies, institutions, etc."
+2,2023,DATE,Absolute or relative dates or periods
+2,97.5,CARDINAL,Numerals that do not fall under another type
+2,2016,CARDINAL,Numerals that do not fall under another type
+2,Department of Energy s Vehicle Technologies Office,ORG,"Companies, agencies, institutions, etc."
+2,5,CARDINAL,Numerals that do not fall under another type
+2,overnight,TIME,Times smaller than a day
+2,the coming years,DATE,Absolute or relative dates or periods
+2,6,CARDINAL,Numerals that do not fall under another type
+2,daytime,TIME,Times smaller than a day
+2,California,GPE,"Countries, cities, states"
+2,more than 1 million,CARDINAL,Numerals that do not fall under another type
+2,less than 1,CARDINAL,Numerals that do not fall under another type
+2,8,CARDINAL,Numerals that do not fall under another type
+2,the U.S. Energy Information Agency,ORG,"Companies, agencies, institutions, etc."
+2,9,CARDINAL,Numerals that do not fall under another type
+2,The Department of Energy s Build,ORG,"Companies, agencies, institutions, etc."
+2,the Infrastructure Investment and Jobs Act,ORG,"Companies, agencies, institutions, etc."
+2,13 billion,CARDINAL,Numerals that do not fall under another type
+2,the next decade,DATE,Absolute or relative dates or periods
+2,DOE s Infrastructure Investment and Jobs Act,ORG,"Companies, agencies, institutions, etc."
+2,Myth 5,LAW,Named documents made into laws.
+2,"77,000",CARDINAL,Numerals that do not fall under another type
+2,"219,000",CARDINAL,Numerals that do not fall under another type
+2,120,CARDINAL,Numerals that do not fall under another type
+2,240,CARDINAL,Numerals that do not fall under another type
+2,up to 7.5 billion,MONEY,"Monetary values, including unit"
+2,the Joint Office of Energy and Transportation,ORG,"Companies, agencies, institutions, etc."
+2,DOE,ORG,"Companies, agencies, institutions, etc."
+2,Myth 6 Electric,ORG,"Companies, agencies, institutions, etc."
+2,daily,DATE,Absolute or relative dates or periods
+2,2022,DATE,Absolute or relative dates or periods
+2,the National Household Travel Survey,ORG,"Companies, agencies, institutions, etc."
+2,over 73,CARDINAL,Numerals that do not fall under another type
+2,10 miles,QUANTITY,"Measurements, as of weight or distance"
+2,over 98,CARDINAL,Numerals that do not fall under another type
+2,less than 75,CARDINAL,Numerals that do not fall under another type
+2,Today,DATE,Absolute or relative dates or periods
+2,above 200 miles,QUANTITY,"Measurements, as of weight or distance"
+2,more than 100 miles,QUANTITY,"Measurements, as of weight or distance"
+2,EPA Fuel Economy,ORG,"Companies, agencies, institutions, etc."
+2,about 40,CARDINAL,Numerals that do not fall under another type
+2,the United States,GPE,"Countries, cities, states"
+2,the Federal Motor Vehicle Safety Standards,ORG,"Companies, agencies, institutions, etc."
+2,DOE s Alternative Fuel Data Center,ORG,"Companies, agencies, institutions, etc."
+2,1,CARDINAL,Numerals that do not fall under another type
+2,U.S. Energy Information Administration EIA Renewables,ORG,"Companies, agencies, institutions, etc."
+2,2,CARDINAL,Numerals that do not fall under another type
+2,the Energy Goes Electric Cars,ORG,"Companies, agencies, institutions, etc."
+2,the Energy Goes Gasoline,ORG,"Companies, agencies, institutions, etc."
+2,"173,151 miles",QUANTITY,"Measurements, as of weight or distance"
+2,30.7,CARDINAL,Numerals that do not fall under another type
+2,4,CARDINAL,Numerals that do not fall under another type
+2,Liz Najman,PERSON,"People, including fictional"
+2,"March 27, 2023",DATE,Absolute or relative dates or periods
+2,Department of Energy DOE,ORG,"Companies, agencies, institutions, etc."
+2,Federal Energy Management Program,ORG,"Companies, agencies, institutions, etc."
+2,Bidirectional Charging and Electric Vehicles for Mobile Storage,ORG,"Companies, agencies, institutions, etc."
+2,U.S. Driving Research and Innovation for Vehicle Efficiency and Energy Sustainability,ORG,"Companies, agencies, institutions, etc."
+2,Scale,ORG,"Companies, agencies, institutions, etc."
+2,the U.S. Electric Power System,ORG,"Companies, agencies, institutions, etc."
+2,706 KB,PERSON,"People, including fictional"
+2,November 2019,DATE,Absolute or relative dates or periods
+2,Electric Vehicles,ORG,"Companies, agencies, institutions, etc."
+2,the Western U.S. Power,ORG,"Companies, agencies, institutions, etc."
+2,15.3,CARDINAL,Numerals that do not fall under another type
+2,MB,ORG,"Companies, agencies, institutions, etc."
+2,July 2020,DATE,Absolute or relative dates or periods
+2,7,CARDINAL,Numerals that do not fall under another type
+2,"September 22, 2022",DATE,Absolute or relative dates or periods
+2,Break the Grid,EVENT,"Named hurricanes, battles, wars, sports events, etc."
+2,"September 19, 2022",DATE,Absolute or relative dates or periods
+2,U.S. Energy Information Administration,ORG,"Companies, agencies, institutions, etc."
+2,Residential Energy Consumption Survey,ORG,"Companies, agencies, institutions, etc."
+2,Detailed,PERSON,"People, including fictional"
+2,Tables CE5.3a,PERSON,"People, including fictional"
+2,436,CARDINAL,Numerals that do not fall under another type
+2,KB,ORG,"Companies, agencies, institutions, etc."
+2,371,CARDINAL,Numerals that do not fall under another type
+2,June 2023,DATE,Absolute or relative dates or periods
+2,10,CARDINAL,Numerals that do not fall under another type
+2,U.S. Department of Transportation,ORG,"Companies, agencies, institutions, etc."
+2,Federal Highway Administration,ORG,"Companies, agencies, institutions, etc."
+2,NextGen Origin-Destination Data Products,ORG,"Companies, agencies, institutions, etc."
+2,"June 28, 2024",DATE,Absolute or relative dates or periods
+3,CO 2,PRODUCT,"Objects, vehicles, foods, etc. (not services)"
+3,hundreds of miles,QUANTITY,"Measurements, as of weight or distance"
+3,Cars,PRODUCT,"Objects, vehicles, foods, etc. (not services)"
+3,fifth,ORDINAL,"""first"", ""second"", etc."
+3,15 to 20 years,DATE,Absolute or relative dates or periods
+3,the 2040s,DATE,Absolute or relative dates or periods
+3,today,DATE,Absolute or relative dates or periods
+3,don,PERSON,"People, including fictional"
+3,EV,ORG,"Companies, agencies, institutions, etc."
+3,U.S.,GPE,"Countries, cities, states"
+3,"7,500",CARDINAL,Numerals that do not fall under another type
+3,"EV,2",PERSON,"People, including fictional"
+3,daily,DATE,Absolute or relative dates or periods
+3,300 miles,QUANTITY,"Measurements, as of weight or distance"
+3,"over 100,000",CARDINAL,Numerals that do not fall under another type
+3,just a third,CARDINAL,Numerals that do not fall under another type
+3,over 100 miles,QUANTITY,"Measurements, as of weight or distance"
+3,50 to 80,CARDINAL,Numerals that do not fall under another type
+3,less CO 2,PRODUCT,"Objects, vehicles, foods, etc. (not services)"
+3,BEV,ORG,"Companies, agencies, institutions, etc."
+3,HEV,PRODUCT,"Objects, vehicles, foods, etc. (not services)"
+3,HEV,ORG,"Companies, agencies, institutions, etc."
+3,PHEV,ORG,"Companies, agencies, institutions, etc."
+3,"July 24, 2023",DATE,Absolute or relative dates or periods
+4,MAP,ORG,"Companies, agencies, institutions, etc."
+4,Fix Climate Change Electric,ORG,"Companies, agencies, institutions, etc."
+4,The California Air Resources Board,ORG,"Companies, agencies, institutions, etc."
+4,2018,DATE,Absolute or relative dates or periods
+4,California,GPE,"Countries, cities, states"
+4,vehicle miles,PERSON,"People, including fictional"
+4,VMT,ORG,"Companies, agencies, institutions, etc."
+4,two,CARDINAL,Numerals that do not fall under another type
+4,first,ORDINAL,"""first"", ""second"", etc."
+4,second,ORDINAL,"""first"", ""second"", etc."
+4,recent years,DATE,Absolute or relative dates or periods
+4,today,DATE,Absolute or relative dates or periods
+4,US,GPE,"Countries, cities, states"
+4,the 2040s,DATE,Absolute or relative dates or periods
+4,100 percent,PERCENT,"Percentage, including ""%"""
+4,this year,DATE,Absolute or relative dates or periods
+4,22 percent,PERCENT,"Percentage, including ""%"""
+4,the late 2030s,DATE,Absolute or relative dates or periods
+4,2035,DATE,Absolute or relative dates or periods
+4,only one,CARDINAL,Numerals that do not fall under another type
+4,EV,ORG,"Companies, agencies, institutions, etc."
+4,around 80,CARDINAL,Numerals that do not fall under another type
+4,Tens of thousands,CARDINAL,Numerals that do not fall under another type
+4,every year,DATE,Absolute or relative dates or periods
+4,the many hours,TIME,Times smaller than a day
+4,Americans,NORP,Nationalities or religious or political groups
+4,each year,DATE,Absolute or relative dates or periods
+4,years,DATE,Absolute or relative dates or periods
+4,Emily Jacobson,PERSON,"People, including fictional"
+4,Spencer Richard,PERSON,"People, including fictional"
+5,FAQ,ORG,"Companies, agencies, institutions, etc."
+5,EV,ORG,"Companies, agencies, institutions, etc."
+5,Smart,ORG,"Companies, agencies, institutions, etc."
