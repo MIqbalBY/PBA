@@ -27,8 +27,8 @@
 | **Tujuan** | Mengklasifikasikan sentimen artikel berita LPDP (Positive / Negative / Neutral) menggunakan teknik NLP |
 | **Bahasa** | Indonesia |
 | **Sumber Data** | Google News RSS via library GNews |
-| **Jumlah Artikel Scraped** | ~1.900 artikel |
-| **Jumlah Artikel Valid** | ~1.100 artikel (setelah validasi URL manual) |
+| **Jumlah Artikel Scraped** | 1.937 artikel |
+| **Jumlah Artikel Valid** | 1.146 artikel (setelah validasi URL manual) |
 | **Labeling** | Manual di Google Sheets (3 kelas: Positive, Negative, Neutral) |
 | **Output Akhir** | Model klasifikasi sentimen + laporan evaluasi performa |
 
@@ -69,35 +69,35 @@ flowchart TD
 | PIC | Phase Utama | Tanggung Jawab |
 | :--- | :--- | :--- |
 | **Iqbal** | Phase 1, 3 | Scraping GNews, BERTopic topic discovery, pipeline doc |
-| **Ratna** | Phase 4 | Preprocessing 10 langkah, kamus slang |
+| **Amel** | Phase 4 | Preprocessing 10 langkah, kamus slang |
 | **Celine** | Phase 5, 6 | Feature extraction (TF-IDF/BoW/IndoBERT), train/test split |
 | **Salwa** | Phase 7, 8 | Model training (baseline + IndoBERT), evaluation metrics |
 | **Nida** | Phase 9, 10 | Visualization, advanced NLP (NER, summarization) |
-| **Semua** | Phase 2 | Validasi URL + labeling manual (~220 artikel/orang) |
+| **Semua** | Phase 2 | Validasi URL + labeling manual (lihat progress table di Phase 2) |
 
 ### Checklist Detail
 
 - [x] **Phase 1 — Scraping** (PIC: Iqbal)
   - [x] Konfigurasi 20 keywords GNews
-  - [ ] Jalankan scraping + deduplikasi
+  - [x] Jalankan scraping + deduplikasi
   - [x] Export `dataset_lpdp_sorted.csv`
 - [ ] **Phase 2 — Validasi dan Labeling** (PIC: Semua)
-  - [ ] Import CSV ke Google Sheets
-  - [ ] Iqbal: validasi + labeling baris 1–220
-  - [ ] Ratna: validasi + labeling baris 221–440
-  - [ ] Celine: validasi + labeling baris 441–660
-  - [ ] Salwa: validasi + labeling baris 661–880
-  - [ ] Nida: validasi + labeling baris 881–1100
+  - [x] Import CSV ke Google Sheets
+  - [x] Amel: validasi + labeling baris 2–389 (312/312 valid ✅)
+  - [ ] Celine: validasi + labeling baris 390–777 (62/320 valid terlabel)
+  - [x] Iqbal: validasi + labeling baris 778–1164 (332/332 valid ✅)
+  - [ ] Nida: validasi + labeling baris 1165–1551 (61/61 valid, belum konfirmasi)
+  - [ ] Salwa: validasi + labeling baris 1552–1938 (121/121 valid, belum konfirmasi)
   - [ ] Rekonsiliasi label antar annotator
   - [ ] Scraping konten artikel (`newspaper3k` + `trafilatura`)
   - [ ] Validasi coverage content ≥ 85%
   - [ ] Fallback `Deskripsi` untuk URL gagal
-- [ ] **Phase 3 — BERTopic** (PIC: Iqbal, Ratna)
+- [ ] **Phase 3 — BERTopic** (PIC: Iqbal, Amel)
   - [ ] Install BERTopic + sentence-transformers
   - [ ] Fit model pada artikel valid
   - [ ] Reduce ke 4 topik utama
   - [ ] Visualisasi dan interpretasi topik
-- [ ] **Phase 4 — Preprocessing** (PIC: Ratna)
+- [ ] **Phase 4 — Preprocessing** (PIC: Amel)
   - [ ] Implementasi pipeline 10 langkah
   - [ ] Buat kamus slang Indonesia
   - [ ] Validasi output `text_clean`
@@ -155,7 +155,7 @@ flowchart TD
 
 - File: `dataset_lpdp_sorted.csv`
 - Kolom: `Judul`, `Tanggal_Rilis`, `Deskripsi`, `URL_Artikel`, `Sumber_Media`, `Tanggal_Parsed`
-- Total: ~1.900 artikel (sebelum validasi)
+- Total: 1.937 artikel (sebelum validasi)
 
 ---
 
@@ -163,17 +163,17 @@ flowchart TD
 
 ### Mengapa Perlu Validasi?
 
-Dari ~1.900 artikel yang di-scrape, banyak URL yang sudah **mati, redirect, atau duplikat konten**. Proses validasi dilakukan manual di Google Sheets.
+Dari **1.937 artikel** yang di-scrape, banyak URL yang sudah **mati, redirect, atau duplikat konten**. Proses validasi dilakukan manual di Google Sheets.
 
 ### Proses Validasi
 
 ```mermaid
 flowchart LR
-    A["~1.900 Artikel\n(Raw CSV)"] --> B["Import ke\nGoogle Sheets"]
+    A["1.937 Artikel\n(Raw CSV)"] --> B["Import ke\nGoogle Sheets"]
     B --> C{"Cek URL\nValid?"}
-    C -->|"Ya"| D["~1.100 Artikel Valid"]
-    C -->|"Tidak"| E["~800 Artikel\nDibuang"]
-    D --> F["Labeling Manual\n3 Kelas Sentimen"]
+    C -->|"Ya"| D["1.146 Artikel Valid"]
+    C -->|"Tidak"| E["791 Artikel\nDibuang"]
+    D --> F["Labeling Manual\n3 Kelas Sentimen\n(888 terlabel)"] 
     F --> G["Content Extraction\nnewspaper3k +\ntrafilatura"]
 ```
 
@@ -193,6 +193,64 @@ Setiap artikel yang valid diberi label sentimen berdasarkan **nada keseluruhan**
 | **Positive** | Artikel bernada positif, apresiatif, atau informatif-netral-positif | Kisah sukses alumni, pembukaan pendaftaran baru |
 | **Negative** | Artikel bernada kritis, negatif, atau kontroversial | Polemik paspor, pelanggaran kontrak, kritik publik |
 | **Neutral** | Artikel informatif murni tanpa tendensi emosional | Pengumuman resmi, data statistik, FAQ |
+
+### Progress Labeling (Per 19 April 2026)
+
+> ⚠️ **Status:** Labeling **belum selesai** — CSV akan diperbarui saat semua anggota selesai.
+
+| PIC | Total Baris | Artikel Valid | Terlabel | Positive | Neutral | Negative | Status |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Amel** | 388 | 312 | 312 | 55 | 135 | 122 | ✅ Selesai |
+| **Celine** | 388 | 320 | 62 | 16 | 22 | 24 | 🔄 Dalam proses |
+| **Iqbal** | 387 | 332 | 332 | 197 | 89 | 46 | ✅ Selesai |
+| **Nida** | 387 | 61 | 61 | 31 | 9 | 21 | 🔄 Belum konfirmasi |
+| **Salwa** | 387 | 121 | 121 | 4 | 80 | 37 | 🔄 Belum konfirmasi |
+| **Total** | **1.937** | **1.146** | **888** | **303** | **335** | **250** | — |
+
+### Struktur Data Tervalidasi
+
+File Google Sheets diekspor sebagai CSV dengan kolom berikut. **Hanya baris `Valid? = TRUE`** yang diproses ke fase berikutnya:
+
+| Kolom | Tipe | Keterangan |
+| :--- | :--- | :--- |
+| `Title` | string | Judul artikel dari Google News |
+| `Release Date` | string | Tanggal rilis (format RFC 2822) |
+| `URL` | string | Link artikel asli |
+| `Publisher` | string | Nama media/publisher |
+| `PiC` | string | Anggota yang memvalidasi |
+| `Valid?` | boolean | `TRUE` = valid, `FALSE` = tidak valid |
+| `Sentiment` | string | Label: `Positive` / `Negative` / `Neutral` |
+| `Notes` | string | Catatan tambahan annotator |
+
+**Contoh data valid:**
+
+```text
+Title        : Cegah kolusi-nepotisme, program LPDP dinilai perlu perketat seleksi
+Release Date : Tue, 03 Mar 2026 04:27:14 GMT
+URL          : https://news.google.com/rss/articles/...
+Publisher    : ANTARA News
+PiC          : Amel
+Valid?       : TRUE
+Sentiment    : Negative
+Notes        :
+```
+
+**Load data valid di Python:**
+
+```python
+import pandas as pd
+
+df_all = pd.read_csv('Kelompok 5 - Link Artikel LPDP - All.csv')
+
+# Filter hanya artikel valid yang sudah dilabeli
+df_valid = df_all[
+    (df_all['Valid?'] == True) &
+    (df_all['Sentiment'].notna())
+].copy().reset_index(drop=True)
+
+print(f"Total valid + terlabel: {len(df_valid)}")
+print(df_valid['Sentiment'].value_counts())
+```
 
 ### Content Extraction (Scraping Isi Artikel)
 
@@ -287,21 +345,22 @@ print(df_valid['content_len'].describe())
 
 ### Output Phase 2
 
-- Spreadsheet dengan kolom tambahan: `PIC`, `Valid?`, `Sentiment`, `Content`, `Notes`
-- Kolom `Content`: isi lengkap artikel (paragraf/kalimat) dari URL asli
-- Dataset final: ~1.100 artikel berlabel + konten siap diproses
+- Spreadsheet dengan kolom: `Title`, `Release Date`, `URL`, `Publisher`, `PiC`, `Valid?`, `Sentiment`, `Notes`
+- Kolom `Content` ditambahkan setelah content extraction selesai
+- Dataset final: **1.146 artikel valid** → setelah labeling penuh + content extraction siap diproses
 
-### Distribusi Label (Estimasi Umum Artikel Berita)
+### Distribusi Label (Data Parsial — 888 dari 1.146 Artikel Valid)
 
-> **Catatan:** Distribusi aktual perlu dihitung dari data final. Pola umum artikel berita:
+> ⚠️ **Catatan:** Angka di bawah adalah **data sementara** dari 888 artikel yang sudah dilabeli. Akan diperbarui saat semua anggota selesai.
 
-| Label | Estimasi Proporsi |
-| :--- | :--- |
-| Neutral | ~50-60% |
-| Negative | ~25-30% |
-| Positive | ~15-20% |
+| Label | Jumlah | Proporsi |
+| :--- | :---: | :---: |
+| **Neutral** | 335 | 37,7% |
+| **Positive** | 303 | 34,1% |
+| **Negative** | 250 | 28,2% |
+| **Total terlabel** | **888** | **100%** |
 
-**Implikasi:** Class imbalance ini akan memengaruhi strategi split dan metrik evaluasi (lihat Phase 6 dan 8).
+**Implikasi:** Distribusi relatif seimbang antara ketiga kelas — class imbalance moderat tetap perlu diantisipasi di Phase 6 (stratified split) dan Phase 8 (F1 weighted).
 
 ---
 
@@ -309,7 +368,7 @@ print(df_valid['content_len'].describe())
 
 ### Tujuan
 
-Mengelompokkan ~1.100 artikel valid ke dalam **4 topik utama** menggunakan BERTopic untuk memahami tema dominan sebelum analisis sentimen.
+Mengelompokkan **1.146 artikel valid** ke dalam **4 topik utama** menggunakan BERTopic untuk memahami tema dominan sebelum analisis sentimen.
 
 ### Kenapa BERTopic, Bukan LDA?
 
@@ -325,7 +384,7 @@ Mengelompokkan ~1.100 artikel valid ke dalam **4 topik utama** menggunakan BERTo
 
 ```mermaid
 flowchart LR
-    A["Artikel Valid\n~1.100 teks"] --> B["Sentence\nEmbeddings"]
+    A["Artikel Valid\n1.146 teks"] --> B["Sentence\nEmbeddings"]
     B --> C["UMAP\nDimensionality\nReduction"]
     C --> D["HDBSCAN\nClustering"]
     D --> E["c-TF-IDF\nTopic\nRepresentation"]
