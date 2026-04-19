@@ -88,7 +88,7 @@ flowchart TD
   - [x] Iqbal: validasi + labeling baris 778–1164 (332/332 valid ✅)
   - [ ] Nida: validasi + labeling baris 1165–1551 (61/61 valid, belum konfirmasi)
   - [ ] Salwa: validasi + labeling baris 1552–1938 (121/121 valid, belum konfirmasi)
-  - [ ] Rekonsiliasi label antar annotator
+  - [x] Rekonsiliasi label antar annotator
   - [ ] Scraping konten artikel (`newspaper3k` + `trafilatura`)
   - [ ] Validasi coverage content ≥ 85%
   - [ ] Fallback `Deskripsi` untuk URL gagal
