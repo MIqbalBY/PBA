@@ -10,11 +10,14 @@
 - [Phase 3: Topic Discovery (BERTopic)](#phase-3-topic-discovery-bertopic)
 - [Phase 4: Preprocessing](#phase-4-preprocessing)
 - [Phase 5: Feature Extraction](#phase-5-feature-extraction)
-- [Phase 6: Train/Test Split](#phase-6-traintest-split)
-- [Phase 7: Model Training](#phase-7-model-training)
-- [Phase 8: Evaluation Metrics](#phase-8-evaluation-metrics)
-- [Phase 9: Visualization dan Analisis](#phase-9-visualization-dan-analisis)
-- [Phase 10: Advanced NLP Tasks (Opsional)](#phase-10-advanced-nlp-tasks-opsional)
+- [Phase 6: NER (Named Entity Recognition)](#phase-6-ner-named-entity-recognition)
+- [Phase 7: POS Tagging (Stanza)](#phase-7-pos-tagging-stanza)
+- [Phase 8: Analisis Sentimen Berbasis Leksikon](#phase-8-analisis-sentimen-berbasis-leksikon)
+- [Phase 9: Train/Test Split](#phase-9-traintest-split)
+- [Phase 10: Model Training](#phase-10-model-training)
+- [Phase 11: Evaluation Metrics](#phase-11-evaluation-metrics)
+- [Phase 12: Visualization dan Analisis](#phase-12-visualization-dan-analisis)
+- [Phase 13: Advanced NLP Tasks (Opsional)](#phase-13-advanced-nlp-tasks-opsional)
 - [Tech Stack](#tech-stack)
 - [Referensi Notebook](#referensi-notebook)
 
@@ -28,7 +31,11 @@
 | **Bahasa** | Indonesia |
 | **Sumber Data** | Google News RSS via library GNews |
 | **Jumlah Artikel Scraped** | 1.937 artikel |
-| **Jumlah Artikel Valid** | 1.146 artikel (setelah validasi URL manual) |
+| **Jumlah Artikel Valid** | 1.370 artikel (setelah validasi URL manual) |
+| **Jumlah Artikel Berlabel** | 1.370 artikel (100% dari artikel valid — labeling selesai) |
+| **Distribusi Label** | Positive: 462 (33,7%) · Neutral: 506 (36,9%) · Negative: 402 (29,3%) |
+| **Jumlah Artikel dengan Konten** | 1.038 artikel ✅ (`dataset_lpdp_konten_raw.csv` — Phase 2 scraping selesai) |
+| **Distribusi Label (Scraped)** | Positive: 385 (37,1%) · Neutral: 342 (33,0%) · Negative: 311 (30,0%) |
 | **Labeling** | Manual di Google Sheets (3 kelas: Positive, Negative, Neutral) |
 | **Output Akhir** | Model klasifikasi sentimen + laporan evaluasi performa |
 
@@ -42,22 +49,28 @@ flowchart TD
     B --> C["Phase 3\nTopic Discovery\nBERTopic 4 Topik"]
     C --> D["Phase 4\nPreprocessing\n10 Langkah"]
     D --> E["Phase 5\nFeature Extraction\nTF-IDF / BoW / IndoBERT"]
-    E --> F["Phase 6\nTrain/Test Split\n80:20 Stratified"]
-    F --> G["Phase 7\nModel Training\nBaseline + Advanced"]
-    G --> H["Phase 8\nEvaluation\nF1 / Precision / Recall"]
-    H --> I["Phase 9\nVisualisasi &\nAnalisis"]
-    I --> J["Phase 10\nAdvanced NLP\nNER / Summarization"]
+    E --> F["Phase 6\nNER\nIndoBERT-NER"]
+    F --> G["Phase 7\nPOS Tagging\nStanza"]
+    G --> H["Phase 8\nSentimen\nLeksikon"]
+    H --> I["Phase 9\nTrain/Test Split\n80:20 Stratified"]
+    I --> J["Phase 10\nModel Training\nBaseline + Advanced"]
+    J --> K["Phase 11\nEvaluation\nF1 / Precision / Recall"]
+    K --> L["Phase 12\nVisualisasi &\nAnalisis"]
+    L --> M["Phase 13\nAdvanced NLP\nSummarization"]
 
     style A fill:#4CAF50,color:#fff
     style B fill:#FF9800,color:#fff
     style C fill:#CDDC39,color:#333
     style D fill:#2196F3,color:#fff
     style E fill:#9C27B0,color:#fff
-    style F fill:#F44336,color:#fff
-    style G fill:#00BCD4,color:#fff
-    style H fill:#E91E63,color:#fff
-    style I fill:#795548,color:#fff
-    style J fill:#607D8B,color:#fff
+    style F fill:#009688,color:#fff
+    style G fill:#FF5722,color:#fff
+    style H fill:#3F51B5,color:#fff
+    style I fill:#F44336,color:#fff
+    style J fill:#00BCD4,color:#fff
+    style K fill:#E91E63,color:#fff
+    style L fill:#795548,color:#fff
+    style M fill:#607D8B,color:#fff
 ```
 
 ---
@@ -68,12 +81,11 @@ flowchart TD
 
 | PIC | Phase Utama | Tanggung Jawab |
 | :--- | :--- | :--- |
-| **Iqbal** | Phase 1, 3 | Scraping GNews, BERTopic topic discovery, pipeline doc |
-| **Amel** | Phase 4 | Preprocessing 10 langkah, kamus slang |
-| **Celine** | Phase 5, 6 | Feature extraction (TF-IDF/BoW/IndoBERT), train/test split |
-| **Salwa** | Phase 7, 8 | Model training (baseline + IndoBERT), evaluation metrics |
-| **Nida** | Phase 9, 10 | Visualization, advanced NLP (NER, summarization) |
-| **Semua** | Phase 2 | Validasi URL + labeling manual (lihat progress table di Phase 2) |
+| **Iqbal** | Phase 1, 4, 13 | Scraping GNews, preprocessing, co-advanced NLP |
+| **Amel** | Phase 2 | Validasi URL + labeling manual (lihat progress table di Phase 2) |
+| **Celine** | Phase 3, 5, 9 | BERTopic topic discovery, feature extraction, train/test split |
+| **Nida** | Phase 6, 7, 8, 12, 13 | NER, POS Tagging, sentimen leksikon, visualization, advanced NLP |
+| **Salwa** | Phase 10, 11 | Model training (baseline + IndoBERT), evaluation metrics |
 
 ### Checklist Detail
 
@@ -81,46 +93,59 @@ flowchart TD
   - [x] Konfigurasi 20 keywords GNews
   - [x] Jalankan scraping + deduplikasi
   - [x] Export `dataset_lpdp_sorted.csv`
-- [ ] **Phase 2 — Validasi dan Labeling** (PIC: Semua)
+- [X] **Phase 2 — Validasi dan Labeling** (PIC: Amel)
   - [x] Import CSV ke Google Sheets
   - [x] Amel: validasi + labeling baris 2–389 (312/312 valid ✅)
-  - [ ] Celine: validasi + labeling baris 390–777 (62/320 valid terlabel)
+  - [x] Celine: validasi + labeling baris 390–777 (315/315 valid ✅)
   - [x] Iqbal: validasi + labeling baris 778–1164 (332/332 valid ✅)
-  - [ ] Nida: validasi + labeling baris 1165–1551 (61/61 valid, belum konfirmasi)
-  - [ ] Salwa: validasi + labeling baris 1552–1938 (121/121 valid, belum konfirmasi)
+  - [x] Nida: validasi + labeling baris 1165–1551 (270/270 valid ✅)
+  - [x] Salwa: validasi + labeling baris 1552–1938 (141/141 valid ✅)
   - [x] Rekonsiliasi label antar annotator
-  - [ ] Scraping konten artikel (`newspaper3k` + `trafilatura`)
-  - [ ] Validasi coverage content ≥ 85%
-  - [ ] Fallback `Deskripsi` untuk URL gagal
-- [ ] **Phase 3 — BERTopic** (PIC: Iqbal, Amel)
+  - [x] Scraping konten artikel (`newspaper3k`) → **1.038/1.370 artikel berhasil (75,8%)**
+  - [x] Export `dataset_lpdp_konten_raw.csv` (Positive: 385 · Neutral: 342 · Negative: 311)
+- [ ] **Phase 3 — BERTopic** (PIC: Celine)
   - [ ] Install BERTopic + sentence-transformers
   - [ ] Fit model pada artikel valid
   - [ ] Reduce ke 4 topik utama
   - [ ] Visualisasi dan interpretasi topik
-- [ ] **Phase 4 — Preprocessing** (PIC: Amel)
+- [ ] **Phase 4 — Preprocessing** (PIC: Iqbal)
   - [ ] Implementasi pipeline 10 langkah
   - [ ] Buat kamus slang Indonesia
   - [ ] Validasi output `text_clean`
 - [ ] **Phase 5 — Feature Extraction** (PIC: Celine)
-  - [ ] TF-IDF vectorization (unigram + bigram)
+  - [ ] TF-IDF vectorization (n-gram)
   - [ ] Bag of Words baseline
   - [ ] IndoBERT embeddings ([CLS] token)
-- [ ] **Phase 6 — Train/Test Split** (PIC: Celine)
+- [ ] **Phase 6 — NER** (PIC: Nida)
+  - [ ] Install transformers + spaCy
+  - [ ] Load `cahya/bert-base-indonesian-NER`
+  - [ ] Ekstrak entitas (PER, ORG, LOC) dari artikel
+  - [ ] Analisis frekuensi entitas per tipe
+- [ ] **Phase 7 — POS Tagging** (PIC: Nida)
+  - [ ] Install Stanza + download model `id` (~500MB)
+  - [ ] POS tagging seluruh artikel dengan Stanza
+  - [ ] Analisis distribusi POS tag (NOUN, VERB, ADJ)
+- [ ] **Phase 8 — Analisis Sentimen Berbasis Leksikon** (PIC: Nida)
+  - [ ] Install TextBlob + download InSet lexicon (positive.tsv, negative.tsv)
+  - [ ] Hitung polarity TextBlob per artikel (Content)
+  - [ ] Hitung skor InSet per artikel (text_clean)
+  - [ ] Evaluasi TextBlob vs label manual
+  - [ ] Evaluasi InSet vs label manual
+- [ ] **Phase 9 — Train/Test Split** (PIC: Celine)
   - [ ] Stratified split 80:20
   - [ ] Verifikasi distribusi label di train dan test
-- [ ] **Phase 7 — Model Training** (PIC: Salwa)
+- [ ] **Phase 10 — Model Training** (PIC: Salwa)
   - [ ] Tier 1: Naive Bayes, Logistic Regression, Linear SVC
   - [ ] Tier 2: IndoBERT fine-tuning (5 epoch)
-- [ ] **Phase 8 — Evaluation** (PIC: Salwa)
+- [ ] **Phase 11 — Evaluation** (PIC: Salwa)
   - [ ] Classification report per model
   - [ ] Confusion matrix visualization
   - [ ] Perbandingan F1 weighted antar model
-- [ ] **Phase 9 — Visualization** (PIC: Nida)
+- [ ] **Phase 12 — Visualization** (PIC: Nida)
   - [ ] Distribusi sentimen (bar chart)
   - [ ] Word cloud per sentimen
   - [ ] Tren temporal + sentimen per media
-- [ ] **Phase 10 — Advanced NLP** (PIC: Nida, Iqbal)
-  - [ ] NER dengan IndoBERT-NER
+- [ ] **Phase 13 — Advanced NLP** (PIC: Nida, Iqbal)
   - [ ] Extractive summarization
 
 ---
@@ -171,9 +196,9 @@ Dari **1.937 artikel** yang di-scrape, banyak URL yang sudah **mati, redirect, a
 flowchart LR
     A["1.937 Artikel\n(Raw CSV)"] --> B["Import ke\nGoogle Sheets"]
     B --> C{"Cek URL\nValid?"}
-    C -->|"Ya"| D["1.146 Artikel Valid"]
-    C -->|"Tidak"| E["791 Artikel\nDibuang"]
-    D --> F["Labeling Manual\n3 Kelas Sentimen\n(888 terlabel)"] 
+    C -->|"Ya"| D["1.370 Artikel Valid"]
+    C -->|"Tidak"| E["567 Artikel\nDibuang"]
+    D --> F["Labeling Manual\n3 Kelas Sentimen\n(1.370 terlabel ✅)"] 
     F --> G["Content Extraction\nnewspaper3k +\ntrafilatura"]
 ```
 
@@ -194,18 +219,18 @@ Setiap artikel yang valid diberi label sentimen berdasarkan **nada keseluruhan**
 | **Negative** | Artikel bernada kritis, negatif, atau kontroversial | Polemik paspor, pelanggaran kontrak, kritik publik |
 | **Neutral** | Artikel informatif murni tanpa tendensi emosional | Pengumuman resmi, data statistik, FAQ |
 
-### Progress Labeling (Per 19 April 2026)
+### Progress Labeling (Per 20 April 2026)
 
-> ⚠️ **Status:** Labeling **belum selesai** — CSV akan diperbarui saat semua anggota selesai.
+> ✅ **Status:** Labeling **selesai 100%** — semua artikel valid sudah dilabeli oleh seluruh anggota.
 
 | PIC | Total Baris | Artikel Valid | Terlabel | Positive | Neutral | Negative | Status |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
 | **Amel** | 388 | 312 | 312 | 55 | 135 | 122 | ✅ Selesai |
-| **Celine** | 388 | 320 | 62 | 16 | 22 | 24 | 🔄 Dalam proses |
+| **Celine** | 388 | 315 | 315 | 81 | 130 | 104 | ✅ Selesai |
 | **Iqbal** | 387 | 332 | 332 | 197 | 89 | 46 | ✅ Selesai |
-| **Nida** | 387 | 61 | 61 | 31 | 9 | 21 | 🔄 Belum konfirmasi |
-| **Salwa** | 387 | 121 | 121 | 4 | 80 | 37 | 🔄 Belum konfirmasi |
-| **Total** | **1.937** | **1.146** | **888** | **303** | **335** | **250** | — |
+| **Nida** | 387 | 270 | 270 | 122 | 55 | 93 | ✅ Selesai |
+| **Salwa** | 387 | 141 | 141 | 7 | 97 | 37 | ✅ Selesai |
+| **Total** | **1.937** | **1.370** | **1.370** | **462** | **506** | **402** | ✅ |
 
 ### Struktur Data Tervalidasi
 
@@ -304,40 +329,13 @@ success_rate = df_valid['Content'].notna().mean()
 print(f"Content extracted: {success_rate:.1%}")
 ```
 
-#### Fallback dengan Trafilatura
-
-```python
-import trafilatura
-
-
-def extract_with_trafilatura(url):
-    """Fallback untuk URL yang gagal di newspaper3k."""
-    try:
-        downloaded = trafilatura.fetch_url(url)
-        return trafilatura.extract(downloaded) if downloaded else None
-    except Exception:
-        return None
-
-
-# Isi yang masih kosong dengan trafilatura
-mask_empty = df_valid['Content'].isna()
-df_valid.loc[mask_empty, 'Content'] = (
-    df_valid.loc[mask_empty, 'URL_Artikel'].apply(extract_with_trafilatura)
-)
-```
-
 #### Validasi Content
 
 | Metric | Target |
 | :--- | :--- |
-| **Coverage** | ≥ 85% artikel valid punya content |
 | **Min length** | ≥ 50 karakter (filter noise) |
-| **Fallback** | Artikel tanpa content → gunakan `Deskripsi` |
 
 ```python
-# Fallback: gunakan Deskripsi jika Content tetap kosong
-df_valid['Content'] = df_valid['Content'].fillna(df_valid['Deskripsi'])
-
 # Statistik panjang content
 df_valid['content_len'] = df_valid['Content'].str.len()
 print(df_valid['content_len'].describe())
@@ -347,20 +345,32 @@ print(df_valid['content_len'].describe())
 
 - Spreadsheet dengan kolom: `Title`, `Release Date`, `URL`, `Publisher`, `PiC`, `Valid?`, `Sentiment`, `Notes`
 - Kolom `Content` ditambahkan setelah content extraction selesai
-- Dataset final: **1.146 artikel valid** → setelah labeling penuh + content extraction siap diproses
+- Dari **1.370 artikel valid**, hanya artikel yang **berhasil di-scrape (punya `Content`)** yang diekspor ke Phase 3
+- Artikel tanpa content (scraping gagal) **dikecualikan** dari dataset output
+- Dataset output: **`dataset_lpdp_konten_raw.csv`** — **1.038 artikel** dengan konten lengkap (75,8% dari 1.370 valid), siap diproses ke Phase 3
 
-### Distribusi Label (Data Parsial — 888 dari 1.146 Artikel Valid)
-
-> ⚠️ **Catatan:** Angka di bawah adalah **data sementara** dari 888 artikel yang sudah dilabeli. Akan diperbarui saat semua anggota selesai.
+### Distribusi Label (Artikel Valid — 1.370 Total)
 
 | Label | Jumlah | Proporsi |
 | :--- | :---: | :---: |
-| **Neutral** | 335 | 37,7% |
-| **Positive** | 303 | 34,1% |
-| **Negative** | 250 | 28,2% |
-| **Total terlabel** | **888** | **100%** |
+| **Neutral** | 506 | 36,9% |
+| **Positive** | 462 | 33,7% |
+| **Negative** | 402 | 29,4% |
+| **Total berlabel** | **1.370** | **100%** |
 
-**Implikasi:** Distribusi relatif seimbang antara ketiga kelas — class imbalance moderat tetap perlu diantisipasi di Phase 6 (stratified split) dan Phase 8 (F1 weighted).
+### Distribusi Label (Artikel Diekspor — `dataset_lpdp_konten_raw.csv` — 1.038 Total)
+
+| Label | Jumlah | Proporsi |
+| :--- | :---: | :---: |
+| **Positive** | 385 | 37,1% |
+| **Neutral** | 342 | 33,0% |
+| **Negative** | 311 | 30,0% |
+| **Total diekspor** | **1.038** | **100%** |
+
+> **Catatan:** 332 artikel (24,2%) tidak berhasil di-scrape (URL mati, paywall, timeout) dan dikecualikan dari Phase 3.
+> Distribusi label pada dataset yang diekspor sedikit berbeda dari dataset berlabel karena subset yang berhasil di-scrape bukan random sample.
+
+**Implikasi:** Distribusi cukup seimbang antara ketiga kelas (rentang ~7%) — class imbalance ringan, stratified split di Phase 9 dan F1 weighted di Phase 11 tetap direkomendasikan.
 
 ---
 
@@ -368,7 +378,7 @@ print(df_valid['content_len'].describe())
 
 ### Tujuan
 
-Mengelompokkan **1.146 artikel valid** ke dalam **4 topik utama** menggunakan BERTopic untuk memahami tema dominan sebelum analisis sentimen.
+Mengelompokkan **1.038 artikel yang berhasil di-scrape** (dari 1.370 valid) ke dalam **4 topik utama** menggunakan BERTopic untuk memahami tema dominan sebelum analisis sentimen.
 
 ### Kenapa BERTopic, Bukan LDA?
 
@@ -384,7 +394,7 @@ Mengelompokkan **1.146 artikel valid** ke dalam **4 topik utama** menggunakan BE
 
 ```mermaid
 flowchart LR
-    A["Artikel Valid\n1.146 teks"] --> B["Sentence\nEmbeddings"]
+    A["1.038 Artikel Berkonten\n(dari 1.370 valid)"] --> B["Sentence\nEmbeddings"]
     B --> C["UMAP\nDimensionality\nReduction"]
     C --> D["HDBSCAN\nClustering"]
     D --> E["c-TF-IDF\nTopic\nRepresentation"]
@@ -457,7 +467,7 @@ topic_model.visualize_heatmap()
 
 - Kolom baru di DataFrame: `topic_id` (0–3) dan `topic_label`
 - Visualisasi topik untuk laporan akhir
-- Insight: distribusi sentimen **per topik** (cross-analysis di Phase 9)
+- Insight: distribusi sentimen **per topik** (cross-analysis di Phase 12)
 
 ---
 
@@ -571,7 +581,333 @@ embedding = outputs.last_hidden_state[:, 0, :]  # [CLS] token
 
 ---
 
-## Phase 6: Train/Test Split
+## Phase 6: NER (Named Entity Recognition)
+
+### Tujuan
+
+Mengidentifikasi entitas bernama (**orang, organisasi, lokasi**) dalam setiap artikel LPDP untuk memahami aktor dan konteks yang dominan dalam pemberitaan.
+
+### Library
+
+| Library | Model/Package | Kegunaan |
+| :--- | :--- | :--- |
+| **Transformers** (HuggingFace) | `cahya/bert-base-indonesian-NER` | NER Bahasa Indonesia (BERT-based) |
+| **spaCy** | `en_core_web_sm` | NER Bahasa Inggris + custom `EntityRuler` |
+
+### Tipe Entitas (Skema IndoBERT-NER)
+
+| Label | Tipe | Contoh |
+| :--- | :--- | :--- |
+| `PER` | Person | `Jokowi`, `Direktur LPDP`, `Alumni LPDP` |
+| `ORG` | Organization | `LPDP`, `Kemenkeu`, `Universitas Indonesia`, `MIT` |
+| `LOC` | Location | `Jakarta`, `Indonesia`, `Amerika Serikat` |
+
+### Implementasi
+
+```python
+# pip install transformers sentencepiece spacy
+# python -m spacy download en_core_web_sm
+
+from transformers import pipeline
+
+# Load model NER bahasa Indonesia
+ner_pipeline = pipeline(
+    "ner",
+    model="cahya/bert-base-indonesian-NER",
+    tokenizer="cahya/bert-base-indonesian-NER",
+    aggregation_strategy="simple"
+)
+
+def extract_entities(text):
+    """Extract named entities dari satu artikel."""
+    results = ner_pipeline(str(text)[:512])  # BERT max 512 token
+    return [
+        {
+            "entity": r["entity_group"],
+            "word": r["word"],
+            "score": round(r["score"], 3)
+        }
+        for r in results
+    ]
+
+# Apply ke seluruh artikel valid
+df_valid["entities"] = df_valid["Content"].apply(extract_entities)
+
+# Contoh output
+sample = extract_entities(
+    "Alumni LPDP dari Universitas Indonesia mendapat beasiswa S2 di MIT, Boston."
+)
+print(sample)
+# [{'entity': 'PER', 'word': 'Alumni LPDP', 'score': 0.991},
+#  {'entity': 'ORG', 'word': 'Universitas Indonesia', 'score': 0.987},
+#  {'entity': 'ORG', 'word': 'MIT', 'score': 0.979},
+#  {'entity': 'LOC', 'word': 'Boston', 'score': 0.965}]
+```
+
+### Analisis Frekuensi Entitas
+
+```python
+from collections import Counter
+import pandas as pd
+
+# Flatten semua entitas ke satu list
+all_entities = [
+    (ent["entity"], ent["word"])
+    for ents in df_valid["entities"]
+    for ent in ents
+]
+
+# Distribusi tipe entitas
+ent_types = [etype for etype, _ in all_entities]
+print("Distribusi tipe entitas:")
+print(Counter(ent_types))
+
+# Top-20 organisasi yang paling sering disebut
+orgs = [word for etype, word in all_entities if etype == "ORG"]
+print("\nTop-20 Organisasi:")
+print(Counter(orgs).most_common(20))
+
+# Top-20 lokasi
+locs = [word for etype, word in all_entities if etype == "LOC"]
+print("\nTop-20 Lokasi:")
+print(Counter(locs).most_common(20))
+```
+
+### Output Phase 6
+
+- Kolom `entities` di DataFrame: list of dicts `{entity, word, score}` per artikel
+- Tabel frekuensi entitas per tipe (ORG, PER, LOC)
+- Insight: organisasi dan tokoh paling dominan dalam pemberitaan LPDP (input untuk Visualisasi di Phase 12)
+
+---
+
+## Phase 7: POS Tagging (Stanza)
+
+### Tujuan
+
+Menandai kelas kata (**NOUN, VERB, ADJ, dll.**) pada setiap token untuk memahami distribusi linguistik artikel LPDP.
+
+### POS Tagging dengan Stanza
+
+#### Kenapa Stanza?
+
+Stanza (Stanford NLP) mendukung Bahasa Indonesia secara resmi dengan model terlatih dari **UD Indonesian GSD corpus**, sementara NLTK tidak memiliki model POS bahasa Indonesia.
+
+```python
+# pip install stanza
+import stanza
+
+# Download model bahasa Indonesia (sekali saja, ~500MB)
+stanza.download('id', processors='tokenize,pos')
+
+# Load pipeline
+nlp_stanza = stanza.Pipeline('id', processors='tokenize,pos', use_gpu=False)
+
+def get_pos_tags(text):
+    """Dapatkan POS tag dari teks Bahasa Indonesia."""
+    doc = nlp_stanza(str(text)[:2000])  # Batasi panjang teks
+    return [
+        (word.text, word.upos)
+        for sent in doc.sentences
+        for word in sent.words
+    ]
+
+# Contoh
+tags = get_pos_tags(
+    "Mahasiswa penerima beasiswa LPDP berhasil lulus dari universitas ternama."
+)
+print(tags)
+# [('Mahasiswa', 'NOUN'), ('penerima', 'NOUN'), ('beasiswa', 'NOUN'),
+#  ('LPDP', 'PROPN'), ('berhasil', 'VERB'), ('lulus', 'VERB'),
+#  ('dari', 'ADP'), ('universitas', 'NOUN'), ('ternama', 'ADJ')]
+```
+
+#### Analisis Distribusi POS
+
+```python
+from collections import Counter
+
+# Hitung distribusi POS tag dari seluruh artikel
+all_tags = [
+    upos
+    for text in df_valid["Content"].dropna()
+    for _, upos in get_pos_tags(text)
+]
+pos_dist = Counter(all_tags)
+print("Distribusi POS:")
+print(pos_dist.most_common(10))
+
+# Ekstrak semua adjektiva (kata sifat) → indikasi sentimen
+adj_tokens = [
+    word
+    for text in df_valid["Content"].dropna()
+    for word, upos in get_pos_tags(text)
+    if upos == "ADJ"
+]
+print("\nTop-20 Adjektiva:")
+print(Counter(adj_tokens).most_common(20))
+```
+
+### Output Phase 7
+
+- Kolom `pos_tags`: list (token, POS_label) per artikel
+- Tabel distribusi POS tag (NOUN, VERB, ADJ, PROPN, dll.)
+- Top-20 adjektiva dominan → bahan tambahan untuk Word Cloud di Phase 12
+
+---
+
+## Phase 8: Analisis Sentimen Berbasis Leksikon
+
+### Tujuan
+
+Dua pendekatan leksikon sebagai **baseline** sebelum model ML di Phase 10:
+
+1. **TextBlob** — leksikon Bahasa Inggris (mengenali kata serapan dan istilah formal)
+2. **InSet** — *Indonesian Sentiment Lexicon* (leksikon Bahasa Indonesia, lebih relevan untuk teks lokal)
+
+> ⚠️ **Catatan:** Keduanya bersifat rule-based, bukan model ML. Hasil digunakan untuk mengukur **gap baseline vs model** di Phase 10. Untuk akurasi produksi, gunakan `indobenchmark/indobert-base-p1` (Phase 10).
+
+---
+
+### A. TextBlob (English Lexicon)
+
+#### Implementasi
+
+```python
+# pip install textblob
+from textblob import TextBlob
+
+def analyze_sentiment_textblob(text):
+    """
+    Polarity: -1.0 (sangat negatif) hingga +1.0 (sangat positif)
+    Threshold: > 0.05 = Positive, < -0.05 = Negative, else Neutral
+    """
+    blob = TextBlob(str(text))
+    polarity = blob.sentiment.polarity
+
+    if polarity > 0.05:
+        label = "Positive"
+    elif polarity < -0.05:
+        label = "Negative"
+    else:
+        label = "Neutral"
+
+    return {"polarity": round(polarity, 4), "label": label}
+
+df_valid["textblob_result"] = df_valid["Content"].apply(analyze_sentiment_textblob)
+df_valid["textblob_polarity"] = df_valid["textblob_result"].apply(lambda x: x["polarity"])
+df_valid["textblob_label"] = df_valid["textblob_result"].apply(lambda x: x["label"])
+
+print(df_valid["textblob_label"].value_counts())
+```
+
+#### Evaluasi vs Label Manual
+
+```python
+from sklearn.metrics import classification_report
+
+df_labeled = df_valid[df_valid["Sentiment"].notna()].copy()
+
+print("=== TextBlob vs Label Manual ===")
+print(classification_report(
+    df_labeled["Sentiment"],
+    df_labeled["textblob_label"],
+    target_names=["Negative", "Neutral", "Positive"]
+))
+# Ekspektasi: akurasi rendah (~40-55%) — TextBlob tidak dirancang untuk Bahasa Indonesia
+```
+
+---
+
+### B. InSet — Indonesian Sentiment Lexicon
+
+**InSet** (Salsabila et al., 2018) adalah leksikon sentimen Bahasa Indonesia berisi kata positif dan negatif beserta bobot numeriknya. Lebih relevan dari TextBlob untuk teks berbahasa Indonesia.
+
+#### Setup Lexicon
+
+```python
+import pandas as pd
+import urllib.request
+
+# Download InSet dari GitHub (fajri91/InSet)
+urllib.request.urlretrieve(
+    "https://raw.githubusercontent.com/fajri91/InSet/master/positive.tsv",
+    "inset_positive.tsv"
+)
+urllib.request.urlretrieve(
+    "https://raw.githubusercontent.com/fajri91/InSet/master/negative.tsv",
+    "inset_negative.tsv"
+)
+
+pos_df = pd.read_csv("inset_positive.tsv", sep="\t", header=None, names=["word", "weight"])
+neg_df = pd.read_csv("inset_negative.tsv", sep="\t", header=None, names=["word", "weight"])
+
+pos_dict = dict(zip(pos_df["word"], pos_df["weight"]))
+neg_dict = dict(zip(neg_df["word"], neg_df["weight"]))
+```
+
+#### Implementasi
+
+```python
+def analyze_sentiment_inset(text):
+    words = str(text).lower().split()
+    pos_score = sum(pos_dict.get(w, 0) for w in words)
+    neg_score = sum(neg_dict.get(w, 0) for w in words)
+    total_score = pos_score - neg_score
+
+    if total_score > 0:
+        label = "Positive"
+    elif total_score < 0:
+        label = "Negative"
+    else:
+        label = "Neutral"
+
+    return {"inset_score": round(total_score, 4), "label": label}
+
+# Gunakan text_clean (sudah preprocessed di Phase 4)
+df_valid["inset_result"] = df_valid["text_clean"].apply(analyze_sentiment_inset)
+df_valid["inset_score"] = df_valid["inset_result"].apply(lambda x: x["inset_score"])
+df_valid["inset_label"] = df_valid["inset_result"].apply(lambda x: x["label"])
+
+print(df_valid["inset_label"].value_counts())
+```
+
+#### Evaluasi vs Label Manual
+
+```python
+print("=== InSet vs Label Manual ===")
+print(classification_report(
+    df_labeled["Sentiment"],
+    df_labeled["inset_label"],
+    target_names=["Negative", "Neutral", "Positive"]
+))
+# Ekspektasi: lebih baik dari TextBlob untuk Bahasa Indonesia (~55-70%)
+```
+
+---
+
+### Perbandingan Dua Metode
+
+```python
+comparison = pd.DataFrame({
+    "TextBlob": df_valid["textblob_label"].value_counts(),
+    "InSet": df_valid["inset_label"].value_counts()
+})
+print(comparison)
+```
+
+### Output Phase 8
+
+- Kolom `textblob_polarity`, `textblob_label` — baseline English lexicon
+- Kolom `inset_score`, `inset_label` — baseline leksikon Bahasa Indonesia
+- Classification report TextBlob vs label manual
+- Classification report InSet vs label manual
+- Tabel perbandingan distribusi kedua metode
+- Insight: InSet > TextBlob untuk teks Bahasa Indonesia; keduanya masih di bawah model ML (Phase 10)
+
+---
+
+## Phase 9: Train/Test Split
 
 ### Mengapa Perlu Split?
 
@@ -592,18 +928,28 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 ```
 
+### Keputusan: Pakai Semua 1.370 Artikel (Tanpa Undersampling)
+
+Imbalance antar kelas hanya ~7% (selisih Neutral vs Negative) — termasuk kategori **ringan**. Undersampling ke 400×3 = 1.200 akan membuang 169 artikel berlabel yang sudah valid. Tidak worth it.
+
+**Strategi yang dipilih:** Pakai semua 1.370, evaluasi dengan `f1_weighted` agar bobot tiap kelas proporsional.
+
+> Semua 1.370 artikel berlabel terpakai — **1.096 untuk training** (model belajar dari pasangan teks→label) dan **274 untuk testing** (prediksi dibandingkan label asli → F1, accuracy, confusion matrix).
+
 ### Kenapa Stratified?
 
-Karena distribusi label **tidak seimbang** (Neutral dominan):
+Karena proporsi label sedikit berbeda antar kelas, perlu dijaga konsisten di train dan test:
 
 ```text
-Distribusi sebelum split:
-  Neutral  : 600 (55%)    →  Train: 480  |  Test: 120
-  Negative : 300 (27%)    →  Train: 240  |  Test:  60
-  Positive : 200 (18%)    →  Train: 160  |  Test:  40
+Distribusi sebelum split (data aktual):
+  Neutral  : 506 (36,9%)  →  Train: ~405  |  Test: ~101
+  Positive : 462 (33,7%)  →  Train: ~370  |  Test:  ~92
+  Negative : 402 (29,3%)  →  Train: ~322  |  Test:  ~80
+  ─────────────────────────────────────────────────
+  Total    : 1.370        →  Train: 1.096  |  Test:  274
 
-Tanpa stratify → Test set bisa kebetulan berisi 90% Neutral → evaluasi misleading
-Dengan stratify → Proporsi 55:27:18 terjaga di train DAN test
+Tanpa stratify → Test set bisa kebetulan berisi >40% Neutral → evaluasi misleading
+Dengan stratify → Proporsi 36,9:33,7:29,3 terjaga di train DAN test
 ```
 
 ### Cross-Validation (Opsional tapi Direkomendasikan)
@@ -624,7 +970,7 @@ print(f"CV F1 (weighted): {scores.mean():.4f} ± {scores.std():.4f}")
 
 ---
 
-## Phase 7: Model Training
+## Phase 10: Model Training
 
 ### Tier 1: Baseline Models (Classical ML + TF-IDF)
 
@@ -710,7 +1056,7 @@ trainer.train()
 
 ---
 
-## Phase 8: Evaluation Metrics
+## Phase 11: Evaluation Metrics
 
 ### Metrik Utama
 
@@ -781,7 +1127,7 @@ Baca per kolom: "Dari 55 yang diprediksi Negative, 45 memang benar Negative"
 
 ---
 
-## Phase 9: Visualization dan Analisis
+## Phase 12: Visualization dan Analisis
 
 ### A. Distribusi Sentimen
 
@@ -834,33 +1180,15 @@ plt.title('Proporsi Sentimen per Sumber Media')
 
 ---
 
-## Phase 10: Advanced NLP Tasks (Opsional)
+## Phase 13: Advanced NLP Tasks (Opsional)
 
-### A. Named Entity Recognition (NER)
+> **Catatan:** Named Entity Recognition (NER) telah dipindahkan ke **Phase 6** sebagai fase wajib pipeline. Phase 13 ini berfokus pada tugas opsional tambahan.
 
-Mengidentifikasi entitas bernama (orang, organisasi, lokasi) dalam artikel LPDP.
-
-```python
-from transformers import pipeline
-
-ner_pipeline = pipeline(
-    "ner",
-    model="cahya/bert-base-indonesian-NER",
-    tokenizer="cahya/bert-base-indonesian-NER",
-    aggregation_strategy="simple"
-)
-
-entities = ner_pipeline("Alumni LPDP dari Universitas Indonesia mendapat beasiswa S2 di MIT")
-# Output: [{'entity_group': 'PER', 'word': 'Alumni LPDP'},
-#          {'entity_group': 'ORG', 'word': 'Universitas Indonesia'},
-#          {'entity_group': 'ORG', 'word': 'MIT'}]
-```
-
-### B. Topic Modeling
+### A. Topic Modeling
 
 > Sudah dicakup secara mendalam di **Phase 3 (BERTopic)** menggunakan contextual embeddings. Lihat [Phase 3: Topic Discovery](#phase-3-topic-discovery-bertopic) untuk implementasi lengkap.
 
-### C. Extractive Summarization
+### B. Extractive Summarization
 
 Meringkas artikel panjang menggunakan metode TF-IDF sentence scoring.
 
@@ -886,7 +1214,9 @@ summary = select_top_sentences(sentence_scores, ratio=0.3)
 | **ML Models** | scikit-learn (SVM, LR, NB) | Latest |
 | **Deep Learning** | transformers, torch | Latest |
 | **Topic Modeling** | BERTopic, sentence-transformers, UMAP, HDBSCAN | Latest |
-| **NER** | transformers (cahya/bert-base-indonesian-NER) | Latest |
+| **NER** | spaCy, transformers (cahya/bert-base-indonesian-NER) | Latest |
+| **POS Tagging** | Stanza (Indonesian model) | Latest |
+| **Analisis Sentimen Leksikon** | TextBlob, InSet | Latest |
 | **Visualization** | matplotlib, seaborn, wordcloud | Latest |
 
 ### Pre-trained Models
@@ -895,6 +1225,7 @@ summary = select_top_sentences(sentence_scores, ratio=0.3)
 | :--- | :--- | :--- |
 | `indobenchmark/indobert-base-p1` | Fine-tuning klasifikasi sentimen | HuggingFace |
 | `cahya/bert-base-indonesian-NER` | Named Entity Recognition Indonesia | HuggingFace |
+| `stanza` (id model) | POS Tagging Bahasa Indonesia | Stanford NLP |
 
 ### Hardware Requirement
 
@@ -915,5 +1246,6 @@ summary = select_top_sentences(sentence_scores, ratio=0.3)
 | `Week 4/Tugas1_TFIDF_SentimentClassification.ipynb` | TF-IDF + model klasifikasi sentimen |
 | `Week 6/SentimentAnalysis.ipynb` | Sentiment analysis dengan TextBlob + visualisasi |
 | `Week 6/NER.ipynb` | NER dengan spaCy dan IndoBERT |
+| `Week 6/POSTagging.ipynb` | POS Tagging dengan Stanza (Bahasa Indonesia) |
 | `Week 6/Clustering.ipynb` | KMeans clustering + TF-IDF |
 | `Week 7/Week7_NER_HonestReview.ipynb` | NER pada dataset review Indonesia |
