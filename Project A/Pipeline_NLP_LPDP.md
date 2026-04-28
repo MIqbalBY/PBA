@@ -99,7 +99,7 @@ flowchart TD
   - [x] Celine: validasi + labeling baris 390–777 (315/315 valid ✅)
   - [x] Iqbal: validasi + labeling baris 778–1164 (332/332 valid ✅)
   - [x] Nida: validasi + labeling baris 1165–1551 (270/270 valid ✅)
-  - [x] Salwa: validasi + labeling baris 1552–1938 (141/141 valid ✅)
+  - [x] Salwa: validasi + labeling baris 1552–1938 (335/335 valid ✅)
   - [x] Rekonsiliasi label antar annotator
   - [x] Scraping konten artikel (`newspaper3k`) → **1.038/1.370 artikel berhasil (75,8%)**
   - [x] Export `dataset_lpdp_konten_raw.csv` (Positive: 385 · Neutral: 342 · Negative: 311)
