@@ -3,6 +3,7 @@
 ## Daftar Isi
 
 - [Gambaran Umum](#gambaran-umum)
+- [Setup Environment](#setup-environment)
 - [Alur Pipeline](#alur-pipeline)
 - [Checklist dan Pembagian Tugas](#checklist-dan-pembagian-tugas)
 - [Phase 1: Data Collection (Scraping)](#phase-1-data-collection-scraping)
@@ -38,6 +39,7 @@
 | **Distribusi Label (Scraped)** | Positive: 385 (37,1%) · Neutral: 342 (33,0%) · Negative: 311 (30,0%) |
 | **Labeling** | Manual di Google Sheets (3 kelas: Positive, Negative, Neutral) |
 | **Output Akhir** | Model klasifikasi sentimen + laporan evaluasi performa |
+
 
 ---
 
