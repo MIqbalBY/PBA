@@ -139,6 +139,7 @@ flowchart TD
 - [ ] **Phase 10 — Model Training** (PIC: Salwa)
   - [ ] Tier 1: Naive Bayes, Logistic Regression, Linear SVC
   - [ ] Tier 2: IndoBERT fine-tuning (5 epoch)
+  - [ ] Tier 3 (Opsional): RAG-based data augmentation jika F1 kelas minority < 0.60
 - [ ] **Phase 11 — Evaluation** (PIC: Celine)
   - [ ] Classification report per model
   - [ ] Confusion matrix visualization
@@ -1072,6 +1073,109 @@ trainer = Trainer(
 trainer.train()
 ```
 
+### Tier 3: RAG-based Data Augmentation (Opsional)
+
+> **Kapan digunakan:** Jalankan Tier 1 dan Tier 2 lebih dulu. Jika F1 salah satu kelas (biasanya `Negative`) < 0.60, gunakan augmentasi ini untuk menyeimbangkan training set.
+
+#### Konsep
+
+Gunakan LLM untuk **generate artikel sintetis** pada kelas minoritas. Artikel nyata yang sudah berlabel digunakan sebagai contoh gaya penulisan (few-shot via retrieval).
+
+```text
+Kelas minority (Negative = 311)
+      ↓
+Retrieve 3-5 artikel Negative yang mirip topik (via FAISS similarity search)
+      ↓
+Prompt LLM: "Buat artikel baru tentang LPDP dengan sentimen Negative
+             berdasarkan gaya artikel berikut: [contoh retrieved]..."
+      ↓
+Generate artikel sintetis berlabel Negative
+      ↓
+Tambahkan ke X_train → training set lebih seimbang
+```
+
+#### Target Augmentasi
+
+| Label | Asli | Target | Perlu Generate |
+| :--- | :---: | :---: | :---: |
+| Positive | 385 | 385 | 0 |
+| Neutral | 342 | 385 | ~43 |
+| Negative | 311 | 385 | ~74 |
+
+#### Implementasi
+
+```python
+import faiss
+import numpy as np
+from sentence_transformers import SentenceTransformer
+from openai import OpenAI  # atau Gemini / Ollama
+
+# 1. Embed semua artikel training
+embedder = SentenceTransformer("sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
+train_embeddings = embedder.encode(X_train_texts, show_progress_bar=True)
+
+# 2. Bangun FAISS index untuk retrieval
+index = faiss.IndexFlatL2(train_embeddings.shape[1])
+index.add(train_embeddings.astype('float32'))
+
+def retrieve_examples(query_text, label, k=3):
+    """Retrieve K artikel training dengan label tertentu yang paling mirip."""
+    query_emb = embedder.encode([query_text]).astype('float32')
+    _, indices = index.search(query_emb, k * 5)  # ambil lebih, filter by label
+    candidates = [(X_train_texts[i], y_train[i]) for i in indices[0]]
+    return [text for text, lbl in candidates if lbl == label][:k]
+
+# 3. Generate artikel sintetis via LLM
+client = OpenAI()  # set OPENAI_API_KEY di environment
+
+def generate_augmented_article(label, retrieved_examples):
+    """Generate 1 artikel sintetis untuk kelas `label`."""
+    examples_str = "\n\n---\n\n".join(
+        [f"Contoh {i+1}:\n{ex[:300]}" for i, ex in enumerate(retrieved_examples)]
+    )
+    prompt = f"""Kamu adalah jurnalis Indonesia. Tulis 1 artikel berita tentang LPDP 
+dengan sentimen {label} (sekitar 150-250 kata, dalam Bahasa Indonesia).
+
+Gunakan gaya penulisan serupa dengan contoh berikut:
+{examples_str}
+
+Artikel baru:"""
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=400,
+        temperature=0.8
+    )
+    return response.choices[0].message.content.strip()
+
+# 4. Augmentasi kelas yang under-represented
+target_count = max(pd.Series(y_train).value_counts())
+augmented_texts, augmented_labels = [], []
+
+for label in ['Neutral', 'Negative']:
+    current_count = sum(1 for y in y_train if y == label)
+    needed = target_count - current_count
+    print(f"Generating {needed} artikel untuk kelas '{label}'...")
+
+    for _ in range(needed):
+        # Retrieve contoh artikel kelas ini
+        seed_text = X_train_texts[y_train.index(label)]  # ambil satu contoh
+        examples = retrieve_examples(seed_text, label, k=3)
+        new_article = generate_augmented_article(label, examples)
+        augmented_texts.append(new_article)
+        augmented_labels.append(label)
+
+# 5. Gabungkan ke training set
+X_train_augmented = X_train_texts + augmented_texts
+y_train_augmented = y_train + augmented_labels
+
+print(f"Training set setelah augmentasi: {len(X_train_augmented)}")
+print(pd.Series(y_train_augmented).value_counts())
+```
+
+> **Penting:** Augmentasi **hanya diterapkan pada training set**. Test set tetap menggunakan data asli agar evaluasi fair.
+
 ### Perbandingan Ekspektasi Performa
 
 | Model | Estimasi F1 (weighted) | Waktu Training | Hardware |
@@ -1080,6 +1184,7 @@ trainer.train()
 | Logistic Regression + TF-IDF | 0.70 - 0.80 | Detik | CPU |
 | Linear SVC + TF-IDF | 0.72 - 0.82 | Detik | CPU |
 | IndoBERT Fine-Tuned | 0.80 - 0.90 | 30-60 menit | GPU (direkomendasikan) |
+| IndoBERT + RAG Augmentation | 0.82 - 0.92 | 30-60 menit | GPU (direkomendasikan) |
 
 ---
 
