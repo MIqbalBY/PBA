@@ -83,11 +83,11 @@ flowchart TD
 
 | PIC | Phase Utama | Tanggung Jawab |
 | :--- | :--- | :--- |
-| **Iqbal** | Phase 1, 4, 13 | Scraping GNews, preprocessing, co-advanced NLP |
-| **Amel** | Phase 2 | Validasi URL + labeling manual (lihat progress table di Phase 2) |
-| **Celine** | Phase 3, 5, 9 | BERTopic topic discovery, feature extraction, train/test split |
-| **Nida** | Phase 6, 7, 8, 12, 13 | NER, POS Tagging, sentimen leksikon, visualization, advanced NLP |
-| **Salwa** | Phase 10, 11 | Model training (baseline + IndoBERT), evaluation metrics |
+| **Iqbal** | Phase 1, 4, 9 | Scraping GNews, preprocessing, train/test split |
+| **Amel** | Phase 2, 7, 13 | Validasi URL + labeling manual, POS Tagging, advanced NLP |
+| **Celine** | Phase 3, 8, 11 | BERTopic topic discovery, sentimen leksikon, evaluation metrics |
+| **Nida** | Phase 6, 12 | NER, visualization dan analisis |
+| **Salwa** | Phase 5, 10 | Feature extraction, model training (baseline + IndoBERT) |
 
 ### Checklist Detail
 
@@ -105,16 +105,18 @@ flowchart TD
   - [x] Rekonsiliasi label antar annotator
   - [x] Scraping konten artikel (`newspaper3k`) → **1.038/1.370 artikel berhasil (75,8%)**
   - [x] Export `dataset_lpdp_konten_raw.csv` (Positive: 385 · Neutral: 342 · Negative: 311)
-- [ ] **Phase 3 — BERTopic** (PIC: Celine)
-  - [ ] Install BERTopic + sentence-transformers
-  - [ ] Fit model pada artikel valid
-  - [ ] Reduce ke 4 topik utama
-  - [ ] Visualisasi dan interpretasi topik
-- [ ] **Phase 4 — Preprocessing** (PIC: Iqbal)
-  - [ ] Implementasi pipeline 10 langkah
-  - [ ] Buat kamus slang Indonesia
-  - [ ] Validasi output `text_clean`
-- [ ] **Phase 5 — Feature Extraction** (PIC: Celine)
+- [x] **Phase 3 — BERTopic** (PIC: Celine)
+  - [x] Install BERTopic + sentence-transformers
+  - [x] Fit model pada artikel valid
+  - [x] Reduce ke 4 topik utama
+  - [x] Visualisasi dan interpretasi topik
+  - [x] Export artefak final (`bertopic_4_topik_final.xlsx`, `bertopic_topic_info.xlsx`, `bertopic_topic_per_chunk.xlsx`, `bertopic_chunks_data.pkl`)
+- [x] **Phase 4 — Preprocessing** (PIC: Iqbal)
+  - [x] Implementasi pipeline 10 langkah
+  - [x] Buat kamus slang Indonesia (`slang_id.csv`, 114 entri)
+  - [x] Validasi output `text_clean` (0 NaN, 0 empty)
+  - [x] Export `dataset_lpdp_preprocessed.csv` (1.038 baris)
+- [ ] **Phase 5 — Feature Extraction** (PIC: Salwa)
   - [ ] TF-IDF vectorization (n-gram)
   - [ ] Bag of Words baseline
   - [ ] IndoBERT embeddings ([CLS] token)
@@ -123,23 +125,24 @@ flowchart TD
   - [ ] Load `cahya/bert-base-indonesian-NER`
   - [ ] Ekstrak entitas (PER, ORG, LOC) dari artikel
   - [ ] Analisis frekuensi entitas per tipe
-- [ ] **Phase 7 — POS Tagging** (PIC: Nida)
+- [ ] **Phase 7 — POS Tagging** (PIC: Amel)
   - [ ] Install Stanza + download model `id` (~500MB)
   - [ ] POS tagging seluruh artikel dengan Stanza
   - [ ] Analisis distribusi POS tag (NOUN, VERB, ADJ)
-- [ ] **Phase 8 — Analisis Sentimen Berbasis Leksikon** (PIC: Nida)
+- [ ] **Phase 8 — Analisis Sentimen Berbasis Leksikon** (PIC: Celine)
   - [ ] Install TextBlob + download InSet lexicon (positive.tsv, negative.tsv)
   - [ ] Hitung polarity TextBlob per artikel (Content)
   - [ ] Hitung skor InSet per artikel (text_clean)
   - [ ] Evaluasi TextBlob vs label manual
   - [ ] Evaluasi InSet vs label manual
-- [ ] **Phase 9 — Train/Test Split** (PIC: Celine)
+- [ ] **Phase 9 — Train/Test Split** (PIC: Iqbal)
   - [ ] Stratified split 80:20
   - [ ] Verifikasi distribusi label di train dan test
 - [ ] **Phase 10 — Model Training** (PIC: Salwa)
   - [ ] Tier 1: Naive Bayes, Logistic Regression, Linear SVC
   - [ ] Tier 2: IndoBERT fine-tuning (5 epoch)
-- [ ] **Phase 11 — Evaluation** (PIC: Salwa)
+  - [ ] Tier 3 (Opsional): RAG-based data augmentation jika F1 kelas minority < 0.60
+- [ ] **Phase 11 — Evaluation** (PIC: Celine)
   - [ ] Classification report per model
   - [ ] Confusion matrix visualization
   - [ ] Perbandingan F1 weighted antar model
@@ -147,7 +150,7 @@ flowchart TD
   - [ ] Distribusi sentimen (bar chart)
   - [ ] Word cloud per sentimen
   - [ ] Tren temporal + sentimen per media
-- [ ] **Phase 13 — Advanced NLP** (PIC: Nida, Iqbal)
+- [ ] **Phase 13 — Advanced NLP** (PIC: Amel)
   - [ ] Extractive summarization
 
 ---
@@ -436,18 +439,27 @@ for topic_id in range(4):
     print(topic_model.get_topic(topic_id))
 ```
 
-### 4 Topik Utama (Estimasi)
+### Hasil Aktual Notebook 3 (Final)
 
-Berdasarkan domain artikel LPDP, BERTopic diharapkan menemukan cluster berikut:
+Notebook 3 telah selesai dijalankan dan menghasilkan model terbaik dengan konfigurasi berikut:
 
-| Topik | Tema | Contoh Keywords |
-| :--- | :--- | :--- |
-| **Topic 0** | Beasiswa dan Pendaftaran | `pendaftaran`, `persyaratan`, `seleksi`, `kuota`, `jadwal` |
-| **Topic 1** | Alumni dan Prestasi | `alumni`, `karier`, `sukses`, `kontribusi`, `pengabdian` |
-| **Topic 2** | Kebijakan dan Polemik | `kebijakan`, `anggaran`, `polemik`, `paspor`, `kontrak` |
-| **Topic 3** | Akademik dan Riset | `universitas`, `penelitian`, `publikasi`, `kampus`, `studi` |
+| Komponen | Nilai |
+| :--- | :--- |
+| **Best model** | `min_cluster_size=150`, `min_samples=5` |
+| **Coherence metric** | **C_v = 0.8178** (gensim) |
+| **Jumlah artikel input** | 1.038 |
+| **Jumlah artikel terlabel topik** | 937 |
+| **Unlabeled (NaN)** | 101 |
+| **Coverage mapping topik** | 90,2% |
 
-> **Catatan:** Label topik di atas adalah estimasi awal. BERTopic menentukan cluster secara otomatis berdasarkan kesamaan semantik — nama topik perlu diinterpretasi dari top words yang dihasilkan model.
+Distribusi 4 label topik final:
+
+| Label Topik Final | Jumlah | Persentase (dari 937 labeled) |
+| :--- | :---: | :---: |
+| Kebijakan & Prioritas Program | 553 | 59,0% |
+| Kewajiban & Sanksi Penerima | 147 | 15,7% |
+| Pendaftaran & Seleksi LPDP | 140 | 14,9% |
+| Kontroversi Penerima Beasiswa | 97 | 10,4% |
 
 ### Visualisasi Topik
 
@@ -467,9 +479,12 @@ topic_model.visualize_heatmap()
 
 ### Output Phase 3
 
-- Kolom baru di DataFrame: `topic_id` (0–3) dan `topic_label`
-- Visualisasi topik untuk laporan akhir
-- Insight: distribusi sentimen **per topik** (cross-analysis di Phase 12)
+- File utama: `output_bertopic/bertopic_4_topik_final.xlsx` (1.038 baris)
+- Metadata topik: `output_bertopic/bertopic_topic_info.xlsx` (19 baris: 18 non-outlier + 1 outlier)
+- Mapping chunk ke topik: `output_bertopic/bertopic_topic_per_chunk.xlsx` (6.104 baris)
+- Data chunk untuk reload model: `output_bertopic/bertopic_chunks_data.pkl`
+- Visualisasi topik tersedia dari notebook untuk kebutuhan laporan akhir
+- Insight siap dipakai: distribusi sentimen **per topik** (cross-analysis di Phase 12)
 
 ---
 
@@ -515,6 +530,19 @@ flowchart TD
 - **Sastrawi** lebih cocok daripada Porter/Snowball karena memahami morfologi Indonesia (imbuhan me-, di-, ke-an, pe-an, dll.)
 - **Slang dictionary** penting karena artikel berita sering mengutip komentar netizen yang mengandung bahasa informal
 - **Stopword list** perlu di-augment dengan domain-specific stopwords jika ditemukan noise berulang
+
+### Hasil Aktual Notebook 4 (Final)
+
+Notebook 4 telah selesai disiapkan end-to-end dan output preprocessing sudah dihasilkan:
+
+| Item | Hasil |
+| :--- | :--- |
+| Input preprocessing | `output_bertopic/bertopic_4_topik_final.xlsx` (1.038 artikel) |
+| Output preprocessing | `dataset_lpdp_preprocessed.csv` (1.038 baris) |
+| Kolom utama output | `text_clean` |
+| Validasi `text_clean` | 0 NaN, 0 empty string |
+| Kamus slang | `slang_id.csv` (114 entri) |
+| Status siap lanjut | ✅ Siap untuk Phase 5 (Feature Extraction) |
 
 ---
 
@@ -1047,6 +1075,109 @@ trainer = Trainer(
 trainer.train()
 ```
 
+### Tier 3: RAG-based Data Augmentation (Opsional)
+
+> **Kapan digunakan:** Jalankan Tier 1 dan Tier 2 lebih dulu. Jika F1 salah satu kelas (biasanya `Negative`) < 0.60, gunakan augmentasi ini untuk menyeimbangkan training set.
+
+#### Konsep
+
+Gunakan LLM untuk **generate artikel sintetis** pada kelas minoritas. Artikel nyata yang sudah berlabel digunakan sebagai contoh gaya penulisan (few-shot via retrieval).
+
+```text
+Kelas minority (Negative = 311)
+      ↓
+Retrieve 3-5 artikel Negative yang mirip topik (via FAISS similarity search)
+      ↓
+Prompt LLM: "Buat artikel baru tentang LPDP dengan sentimen Negative
+             berdasarkan gaya artikel berikut: [contoh retrieved]..."
+      ↓
+Generate artikel sintetis berlabel Negative
+      ↓
+Tambahkan ke X_train → training set lebih seimbang
+```
+
+#### Target Augmentasi
+
+| Label | Asli | Target | Perlu Generate |
+| :--- | :---: | :---: | :---: |
+| Positive | 385 | 385 | 0 |
+| Neutral | 342 | 385 | ~43 |
+| Negative | 311 | 385 | ~74 |
+
+#### Implementasi
+
+```python
+import faiss
+import numpy as np
+from sentence_transformers import SentenceTransformer
+from openai import OpenAI  # atau Gemini / Ollama
+
+# 1. Embed semua artikel training
+embedder = SentenceTransformer("sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
+train_embeddings = embedder.encode(X_train_texts, show_progress_bar=True)
+
+# 2. Bangun FAISS index untuk retrieval
+index = faiss.IndexFlatL2(train_embeddings.shape[1])
+index.add(train_embeddings.astype('float32'))
+
+def retrieve_examples(query_text, label, k=3):
+    """Retrieve K artikel training dengan label tertentu yang paling mirip."""
+    query_emb = embedder.encode([query_text]).astype('float32')
+    _, indices = index.search(query_emb, k * 5)  # ambil lebih, filter by label
+    candidates = [(X_train_texts[i], y_train[i]) for i in indices[0]]
+    return [text for text, lbl in candidates if lbl == label][:k]
+
+# 3. Generate artikel sintetis via LLM
+client = OpenAI()  # set OPENAI_API_KEY di environment
+
+def generate_augmented_article(label, retrieved_examples):
+    """Generate 1 artikel sintetis untuk kelas `label`."""
+    examples_str = "\n\n---\n\n".join(
+        [f"Contoh {i+1}:\n{ex[:300]}" for i, ex in enumerate(retrieved_examples)]
+    )
+    prompt = f"""Kamu adalah jurnalis Indonesia. Tulis 1 artikel berita tentang LPDP 
+dengan sentimen {label} (sekitar 150-250 kata, dalam Bahasa Indonesia).
+
+Gunakan gaya penulisan serupa dengan contoh berikut:
+{examples_str}
+
+Artikel baru:"""
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=400,
+        temperature=0.8
+    )
+    return response.choices[0].message.content.strip()
+
+# 4. Augmentasi kelas yang under-represented
+target_count = max(pd.Series(y_train).value_counts())
+augmented_texts, augmented_labels = [], []
+
+for label in ['Neutral', 'Negative']:
+    current_count = sum(1 for y in y_train if y == label)
+    needed = target_count - current_count
+    print(f"Generating {needed} artikel untuk kelas '{label}'...")
+
+    for _ in range(needed):
+        # Retrieve contoh artikel kelas ini
+        seed_text = X_train_texts[y_train.index(label)]  # ambil satu contoh
+        examples = retrieve_examples(seed_text, label, k=3)
+        new_article = generate_augmented_article(label, examples)
+        augmented_texts.append(new_article)
+        augmented_labels.append(label)
+
+# 5. Gabungkan ke training set
+X_train_augmented = X_train_texts + augmented_texts
+y_train_augmented = y_train + augmented_labels
+
+print(f"Training set setelah augmentasi: {len(X_train_augmented)}")
+print(pd.Series(y_train_augmented).value_counts())
+```
+
+> **Penting:** Augmentasi **hanya diterapkan pada training set**. Test set tetap menggunakan data asli agar evaluasi fair.
+
 ### Perbandingan Ekspektasi Performa
 
 | Model | Estimasi F1 (weighted) | Waktu Training | Hardware |
@@ -1055,6 +1186,7 @@ trainer.train()
 | Logistic Regression + TF-IDF | 0.70 - 0.80 | Detik | CPU |
 | Linear SVC + TF-IDF | 0.72 - 0.82 | Detik | CPU |
 | IndoBERT Fine-Tuned | 0.80 - 0.90 | 30-60 menit | GPU (direkomendasikan) |
+| IndoBERT + RAG Augmentation | 0.82 - 0.92 | 30-60 menit | GPU (direkomendasikan) |
 
 ---
 
