@@ -81,11 +81,11 @@ flowchart TD
 
 | PIC | Phase Utama | Tanggung Jawab |
 | :--- | :--- | :--- |
-| **Iqbal** | Phase 1, 4, 13 | Scraping GNews, preprocessing, co-advanced NLP |
-| **Amel** | Phase 2 | Validasi URL + labeling manual (lihat progress table di Phase 2) |
-| **Celine** | Phase 3, 5, 9 | BERTopic topic discovery, feature extraction, train/test split |
-| **Nida** | Phase 6, 7, 8, 12, 13 | NER, POS Tagging, sentimen leksikon, visualization, advanced NLP |
-| **Salwa** | Phase 10, 11 | Model training (baseline + IndoBERT), evaluation metrics |
+| **Iqbal** | Phase 1, 4, 9 | Scraping GNews, preprocessing, train/test split |
+| **Amel** | Phase 2, 7, 13 | Validasi URL + labeling manual, POS Tagging, advanced NLP |
+| **Celine** | Phase 3, 8, 11 | BERTopic topic discovery, sentimen leksikon, evaluation metrics |
+| **Nida** | Phase 6, 12 | NER, visualization dan analisis |
+| **Salwa** | Phase 5, 10 | Feature extraction, model training (baseline + IndoBERT) |
 
 ### Checklist Detail
 
@@ -103,16 +103,18 @@ flowchart TD
   - [x] Rekonsiliasi label antar annotator
   - [x] Scraping konten artikel (`newspaper3k`) → **1.038/1.370 artikel berhasil (75,8%)**
   - [x] Export `dataset_lpdp_konten_raw.csv` (Positive: 385 · Neutral: 342 · Negative: 311)
-- [ ] **Phase 3 — BERTopic** (PIC: Celine)
-  - [ ] Install BERTopic + sentence-transformers
-  - [ ] Fit model pada artikel valid
-  - [ ] Reduce ke 4 topik utama
-  - [ ] Visualisasi dan interpretasi topik
-- [ ] **Phase 4 — Preprocessing** (PIC: Iqbal)
-  - [ ] Implementasi pipeline 10 langkah
-  - [ ] Buat kamus slang Indonesia
-  - [ ] Validasi output `text_clean`
-- [ ] **Phase 5 — Feature Extraction** (PIC: Celine)
+- [x] **Phase 3 — BERTopic** (PIC: Celine)
+  - [x] Install BERTopic + sentence-transformers
+  - [x] Fit model pada artikel valid
+  - [x] Reduce ke 4 topik utama
+  - [x] Visualisasi dan interpretasi topik
+  - [x] Export artefak final (`bertopic_4_topik_final.xlsx`, `bertopic_topic_info.xlsx`, `bertopic_topic_per_chunk.xlsx`, `bertopic_chunks_data.pkl`)
+- [x] **Phase 4 — Preprocessing** (PIC: Iqbal)
+  - [x] Implementasi pipeline 10 langkah
+  - [x] Buat kamus slang Indonesia (`slang_id.csv`, 114 entri)
+  - [x] Validasi output `text_clean` (0 NaN, 0 empty)
+  - [x] Export `dataset_lpdp_preprocessed.csv` (1.038 baris)
+- [ ] **Phase 5 — Feature Extraction** (PIC: Salwa)
   - [ ] TF-IDF vectorization (n-gram)
   - [ ] Bag of Words baseline
   - [ ] IndoBERT embeddings ([CLS] token)
@@ -121,23 +123,23 @@ flowchart TD
   - [ ] Load `cahya/bert-base-indonesian-NER`
   - [ ] Ekstrak entitas (PER, ORG, LOC) dari artikel
   - [ ] Analisis frekuensi entitas per tipe
-- [ ] **Phase 7 — POS Tagging** (PIC: Nida)
+- [ ] **Phase 7 — POS Tagging** (PIC: Amel)
   - [ ] Install Stanza + download model `id` (~500MB)
   - [ ] POS tagging seluruh artikel dengan Stanza
   - [ ] Analisis distribusi POS tag (NOUN, VERB, ADJ)
-- [ ] **Phase 8 — Analisis Sentimen Berbasis Leksikon** (PIC: Nida)
+- [ ] **Phase 8 — Analisis Sentimen Berbasis Leksikon** (PIC: Celine)
   - [ ] Install TextBlob + download InSet lexicon (positive.tsv, negative.tsv)
   - [ ] Hitung polarity TextBlob per artikel (Content)
   - [ ] Hitung skor InSet per artikel (text_clean)
   - [ ] Evaluasi TextBlob vs label manual
   - [ ] Evaluasi InSet vs label manual
-- [ ] **Phase 9 — Train/Test Split** (PIC: Celine)
+- [ ] **Phase 9 — Train/Test Split** (PIC: Iqbal)
   - [ ] Stratified split 80:20
   - [ ] Verifikasi distribusi label di train dan test
 - [ ] **Phase 10 — Model Training** (PIC: Salwa)
   - [ ] Tier 1: Naive Bayes, Logistic Regression, Linear SVC
   - [ ] Tier 2: IndoBERT fine-tuning (5 epoch)
-- [ ] **Phase 11 — Evaluation** (PIC: Salwa)
+- [ ] **Phase 11 — Evaluation** (PIC: Celine)
   - [ ] Classification report per model
   - [ ] Confusion matrix visualization
   - [ ] Perbandingan F1 weighted antar model
@@ -145,7 +147,7 @@ flowchart TD
   - [ ] Distribusi sentimen (bar chart)
   - [ ] Word cloud per sentimen
   - [ ] Tren temporal + sentimen per media
-- [ ] **Phase 13 — Advanced NLP** (PIC: Nida, Iqbal)
+- [ ] **Phase 13 — Advanced NLP** (PIC: Amel)
   - [ ] Extractive summarization
 
 ---
@@ -434,18 +436,27 @@ for topic_id in range(4):
     print(topic_model.get_topic(topic_id))
 ```
 
-### 4 Topik Utama (Estimasi)
+### Hasil Aktual Notebook 3 (Final)
 
-Berdasarkan domain artikel LPDP, BERTopic diharapkan menemukan cluster berikut:
+Notebook 3 telah selesai dijalankan dan menghasilkan model terbaik dengan konfigurasi berikut:
 
-| Topik | Tema | Contoh Keywords |
-| :--- | :--- | :--- |
-| **Topic 0** | Beasiswa dan Pendaftaran | `pendaftaran`, `persyaratan`, `seleksi`, `kuota`, `jadwal` |
-| **Topic 1** | Alumni dan Prestasi | `alumni`, `karier`, `sukses`, `kontribusi`, `pengabdian` |
-| **Topic 2** | Kebijakan dan Polemik | `kebijakan`, `anggaran`, `polemik`, `paspor`, `kontrak` |
-| **Topic 3** | Akademik dan Riset | `universitas`, `penelitian`, `publikasi`, `kampus`, `studi` |
+| Komponen | Nilai |
+| :--- | :--- |
+| **Best model** | `min_cluster_size=150`, `min_samples=5` |
+| **Coherence metric** | **C_v = 0.8178** (gensim) |
+| **Jumlah artikel input** | 1.038 |
+| **Jumlah artikel terlabel topik** | 937 |
+| **Unlabeled (NaN)** | 101 |
+| **Coverage mapping topik** | 90,2% |
 
-> **Catatan:** Label topik di atas adalah estimasi awal. BERTopic menentukan cluster secara otomatis berdasarkan kesamaan semantik — nama topik perlu diinterpretasi dari top words yang dihasilkan model.
+Distribusi 4 label topik final:
+
+| Label Topik Final | Jumlah | Persentase (dari 937 labeled) |
+| :--- | :---: | :---: |
+| Kebijakan & Prioritas Program | 553 | 59,0% |
+| Kewajiban & Sanksi Penerima | 147 | 15,7% |
+| Pendaftaran & Seleksi LPDP | 140 | 14,9% |
+| Kontroversi Penerima Beasiswa | 97 | 10,4% |
 
 ### Visualisasi Topik
 
@@ -465,9 +476,12 @@ topic_model.visualize_heatmap()
 
 ### Output Phase 3
 
-- Kolom baru di DataFrame: `topic_id` (0–3) dan `topic_label`
-- Visualisasi topik untuk laporan akhir
-- Insight: distribusi sentimen **per topik** (cross-analysis di Phase 12)
+- File utama: `output_bertopic/bertopic_4_topik_final.xlsx` (1.038 baris)
+- Metadata topik: `output_bertopic/bertopic_topic_info.xlsx` (19 baris: 18 non-outlier + 1 outlier)
+- Mapping chunk ke topik: `output_bertopic/bertopic_topic_per_chunk.xlsx` (6.104 baris)
+- Data chunk untuk reload model: `output_bertopic/bertopic_chunks_data.pkl`
+- Visualisasi topik tersedia dari notebook untuk kebutuhan laporan akhir
+- Insight siap dipakai: distribusi sentimen **per topik** (cross-analysis di Phase 12)
 
 ---
 
@@ -513,6 +527,19 @@ flowchart TD
 - **Sastrawi** lebih cocok daripada Porter/Snowball karena memahami morfologi Indonesia (imbuhan me-, di-, ke-an, pe-an, dll.)
 - **Slang dictionary** penting karena artikel berita sering mengutip komentar netizen yang mengandung bahasa informal
 - **Stopword list** perlu di-augment dengan domain-specific stopwords jika ditemukan noise berulang
+
+### Hasil Aktual Notebook 4 (Final)
+
+Notebook 4 telah selesai disiapkan end-to-end dan output preprocessing sudah dihasilkan:
+
+| Item | Hasil |
+| :--- | :--- |
+| Input preprocessing | `output_bertopic/bertopic_4_topik_final.xlsx` (1.038 artikel) |
+| Output preprocessing | `dataset_lpdp_preprocessed.csv` (1.038 baris) |
+| Kolom utama output | `text_clean` |
+| Validasi `text_clean` | 0 NaN, 0 empty string |
+| Kamus slang | `slang_id.csv` (114 entri) |
+| Status siap lanjut | ✅ Siap untuk Phase 5 (Feature Extraction) |
 
 ---
 
