@@ -3,7 +3,6 @@
 ## Daftar Isi
 
 - [Gambaran Umum](#gambaran-umum)
-- [Setup Environment](#setup-environment)
 - [Alur Pipeline](#alur-pipeline)
 - [Checklist dan Pembagian Tugas](#checklist-dan-pembagian-tugas)
 - [Phase 1: Data Collection (Scraping)](#phase-1-data-collection-scraping)
@@ -39,7 +38,6 @@
 | **Distribusi Label (Scraped)** | Positive: 385 (37,1%) · Neutral: 342 (33,0%) · Negative: 311 (30,0%) |
 | **Labeling** | Manual di Google Sheets (3 kelas: Positive, Negative, Neutral) |
 | **Output Akhir** | Model klasifikasi sentimen + laporan evaluasi performa |
-
 
 ---
 
@@ -131,7 +129,7 @@ flowchart LR
         n4a["Track A\nHeavy Preprocessing\n10 langkah"]
         n4b["Track B\nMinimal Preprocessing\npreprocess_for_bert()"]
         n4ao[("dataset_lpdp_\npreprocessed.csv\nkolom: text_clean ✅")]
-        n4bo[("dataset_lpdp_\npreprocessed_bert.csv\nkolom: text_bert ⬜")]
+        n4bo[("dataset_lpdp_\npreprocessed_bert.csv\nkolom: text_bert ✅")]
         n4a --> n4ao
         n4b --> n4bo
     end
@@ -262,8 +260,8 @@ flowchart LR
   - [x] Buat kamus slang Indonesia (`slang_id.csv`, 114 entri)
   - [x] Validasi output `text_clean` (0 NaN, 0 empty)
   - [x] Export `dataset_lpdp_preprocessed.csv` (1.038 baris, kolom `text_clean`)
-  - [ ] **Track B (IndoBERT):** Implementasi pipeline minimal — NO stemming, NO stopword removal, NO lowercase, NO manual tokenization
-  - [ ] Export `dataset_lpdp_preprocessed_bert.csv` (1.038 baris, kolom `text_bert`)
+  - [x] **Track B (IndoBERT):** Implementasi pipeline minimal — NO stemming, NO stopword removal, NO lowercase, NO manual tokenization
+  - [x] Export `dataset_lpdp_preprocessed_bert.csv` (1.038 baris, kolom `text_bert`)
 - [ ] **Phase 5 — Feature Extraction** (PIC: Salwa)
   - [ ] TF-IDF vectorization (n-gram)
   - [ ] Bag of Words baseline
@@ -692,7 +690,7 @@ flowchart TD
         A10["10. Join Tokens"] --> OUTA["Output: text_clean\ndataset_lpdp_preprocessed.csv"]
     end
 
-    subgraph TRACK_B ["Track B — Minimal Preprocessing (TODO)"]
+    subgraph TRACK_B ["Track B — Minimal Preprocessing (DONE ✅)"]
         B1["1. Fix HTML & Encoding"] --> B2
         B2["2. Remove URL"] --> B3
         B3["3. Remove Mention & Hashtag"] --> B4
@@ -772,18 +770,18 @@ df['text_bert'] = df['Content'].apply(preprocess_for_bert)
 | **Truncation** | Manual (karakter) | ✅ Via tokenizer (`max_length=512`) |
 | **Output** | `text_clean` | `text_bert` |
 | **File** | `dataset_lpdp_preprocessed.csv` | `dataset_lpdp_preprocessed_bert.csv` |
-| **Status** | ✅ Selesai | ⬜ Perlu dikerjakan |
+| **Status** | ✅ Selesai | ✅ Selesai |
 
 ### Hasil Aktual Notebook 4 (Final)
 
 | Item | Track A (TF-IDF/BoW) | Track B (IndoBERT) |
 | :--- | :--- | :--- |
 | Input | `output_bertopic/bertopic_4_topik_final.xlsx` (1.038 artikel) | Sama |
-| Output | `dataset_lpdp_preprocessed.csv` | `dataset_lpdp_preprocessed_bert.csv` (TODO) |
+| Output | `dataset_lpdp_preprocessed.csv` | `dataset_lpdp_preprocessed_bert.csv` ✅ |
 | Kolom utama | `text_clean` | `text_bert` |
-| Validasi | 0 NaN, 0 empty string | — |
+| Validasi | 0 NaN, 0 empty string | 0 NaN, 0 empty string |
 | Kamus slang | `slang_id.csv` (114 entri) | Tidak digunakan |
-| Status | ✅ Selesai | ⬜ Perlu dikerjakan |
+| Status | ✅ Selesai | ✅ Selesai |
 
 ---
 
