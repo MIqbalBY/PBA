@@ -45,35 +45,181 @@
 
 ## Alur Pipeline
 
+### Diagram Utama (Single-Track Overview)
+
 ```mermaid
 flowchart TD
-    A["Phase 1\nScraping\n20 Keywords × GNews"] --> B["Phase 2\nValidasi URL +\nLabeling + Content"]
-    B --> C["Phase 3\nTopic Discovery\nBERTopic 4 Topik"]
-    C --> D["Phase 4\nPreprocessing\n10 Langkah"]
-    D --> E["Phase 5\nFeature Extraction\nTF-IDF / BoW / IndoBERT"]
-    E --> F["Phase 6\nNER\nIndoBERT-NER"]
-    F --> G["Phase 7\nPOS Tagging\nStanza"]
-    G --> H["Phase 8\nSentimen\nLeksikon"]
-    H --> I["Phase 9\nTrain/Test Split\n80:20 Stratified"]
-    I --> J["Phase 10\nModel Training\nBaseline + Advanced"]
-    J --> K["Phase 11\nEvaluation\nF1 / Precision / Recall"]
-    K --> L["Phase 12\nVisualisasi &\nAnalisis"]
-    L --> M["Phase 13\nAdvanced NLP\nSummarization"]
+    A["📰 Phase 1\nScraping\n20 Keywords × GNews\n→ dataset_lpdp_sorted.csv"] --> B
+    B["✅ Phase 2\nValidasi URL + Labeling\n+ Scraping Konten\n→ dataset_lpdp_konten_raw.csv"] --> C
+    C["🔍 Phase 3\nTopic Discovery\nBERTopic 4 Topik\n→ bertopic_4_topik_final.xlsx"] --> D
+
+    D["⚙️ Phase 4\nPreprocessing\n── TITIK PERCABANGAN ──\nTrack A & Track B"]
+
+    D -->|"Track A\nHeavy Preprocessing\n(Stemming + Stopword + dll)"| E_A
+    D -->|"Track B\nMinimal Preprocessing\n(HTML fix + normalize only)"| E_B
+
+    E_A["📊 Phase 5\nFeature Extraction\nTF-IDF & BoW\n← text_clean"] --> I
+    E_B["🤖 Phase 5 (skip)\nIndoBERT tokenize\nlangsung di Phase 10\n← text_bert"] --> I
+
+    D -->|"Raw Content\n(independent)"| F
+    D -->|"Raw Content\n(independent)"| G
+
+    F["🏷️ Phase 6\nNER\ncahya/bert-base-indonesian-NER"] --> H_merge
+    G["🔤 Phase 7\nPOS Tagging\nStanza 'id'"] --> H_merge
+
+    E_A -->|"text_clean"| H["📖 Phase 8\nSentimen Leksikon\nInSet + TextBlob"]
+    H --> I
+
+    H_merge["(merge analisis linguistic)"]
+    H_merge --> I
+
+    I["✂️ Phase 9\nTrain/Test Split\n80:20 Stratified"] --> J_A & J_B
+    J_A["🎯 Phase 10 Tier 1\nClassical ML\nNB + LR + LinearSVC\n(Track A)"] --> K
+    J_B["🧠 Phase 10 Tier 2\nIndoBERT Fine-Tuning\n5 epoch, lr=2e-5\n(Track B)"] --> K
+
+    K["📈 Phase 11\nEvaluation\nF1 Weighted · Confusion Matrix"] --> L
+    L["📊 Phase 12\nVisualisasi\nWord Cloud · Tren · Entitas"] --> M
+    M["📝 Phase 13\nAdvanced NLP\nSummarizasi Artikel"]
 
     style A fill:#4CAF50,color:#fff
     style B fill:#FF9800,color:#fff
     style C fill:#CDDC39,color:#333
-    style D fill:#2196F3,color:#fff
-    style E fill:#9C27B0,color:#fff
-    style F fill:#009688,color:#fff
-    style G fill:#FF5722,color:#fff
-    style H fill:#3F51B5,color:#fff
-    style I fill:#F44336,color:#fff
-    style J fill:#00BCD4,color:#fff
-    style K fill:#E91E63,color:#fff
-    style L fill:#795548,color:#fff
-    style M fill:#607D8B,color:#fff
+    style D fill:#1565C0,color:#fff
+    style E_A fill:#7B1FA2,color:#fff
+    style E_B fill:#4527A0,color:#fff
+    style F fill:#00695C,color:#fff
+    style G fill:#BF360C,color:#fff
+    style H fill:#283593,color:#fff
+    style I fill:#B71C1C,color:#fff
+    style J_A fill:#00838F,color:#fff
+    style J_B fill:#00838F,color:#fff
+    style K fill:#880E4F,color:#fff
+    style L fill:#4E342E,color:#fff
+    style M fill:#37474F,color:#fff
+    style H_merge fill:#546E7A,color:#fff
 ```
+
+---
+
+### Diagram Percabangan Track A vs Track B (Per Notebook)
+
+```mermaid
+flowchart LR
+    subgraph NB1["📓 Notebook 1 — Phase 1"]
+        direction TB
+        n1["Scraping GNews\n20 keywords"]
+        n1o[("dataset_lpdp_sorted.csv\n1.937 artikel")]
+        n1 --> n1o
+    end
+
+    subgraph NB2["📓 Notebook 2 — Phase 2"]
+        direction TB
+        n2["Validasi URL +\nLabeling Manual +\nScraping Konten"]
+        n2o[("dataset_lpdp_konten_raw.csv\n1.038 artikel")]
+        n2 --> n2o
+    end
+
+    subgraph NB3["📓 Notebook 3 — Phase 3"]
+        direction TB
+        n3["BERTopic\n4 Topik"]
+        n3o[("bertopic_4_topik_final.xlsx")]
+        n3 --> n3o
+    end
+
+    subgraph NB4["📓 Notebook 4 — Phase 4 ⚠️ PERCABANGAN"]
+        direction TB
+        n4a["Track A\nHeavy Preprocessing\n10 langkah"]
+        n4b["Track B\nMinimal Preprocessing\npreprocess_for_bert()"]
+        n4ao[("dataset_lpdp_\npreprocessed.csv\nkolom: text_clean ✅")]
+        n4bo[("dataset_lpdp_\npreprocessed_bert.csv\nkolom: text_bert ⬜")]
+        n4a --> n4ao
+        n4b --> n4bo
+    end
+
+    subgraph NB5["📓 Notebook 5 — Phase 5"]
+        direction TB
+        n5a["TF-IDF / BoW\n← text_clean\n(Track A only)"]
+        n5b["❌ Skip\n(IndoBERT tokenize\nlangsung di Nb10)"]
+    end
+
+    subgraph NB6["📓 Notebook 6 — Phase 6"]
+        direction TB
+        n6["NER\ncahya/bert-indonesian-NER\n← raw Content\n(independen)"]
+    end
+
+    subgraph NB7["📓 Notebook 7 — Phase 7"]
+        direction TB
+        n7["POS Tagging\nStanza 'id'\n← raw Content\n(independen)"]
+    end
+
+    subgraph NB8["📓 Notebook 8 — Phase 8"]
+        direction TB
+        n8a["InSet Leksikon\n← text_clean (Track A)"]
+        n8b["TextBlob\n← Content"]
+    end
+
+    subgraph NB9["📓 Notebook 9 — Phase 9"]
+        direction TB
+        n9a["Split Track A\nX_tfidf → train/test"]
+        n9b["Split Track B\ntext_bert → train/eval"]
+    end
+
+    subgraph NB10["📓 Notebook 10 — Phase 10"]
+        direction TB
+        n10a["Tier 1: Classical ML\nNB + LR + LinearSVC\n(Track A)"]
+        n10b["Tier 2: IndoBERT\nFine-Tuning 5 epoch\n(Track B)"]
+        n10c["Tier 3 (Opsional)\nRAG Augmentation\njika F1 Neg < 0.60"]
+        n10a -.-> n10c
+        n10b -.-> n10c
+    end
+
+    subgraph NB11_13["📓 Notebook 11–13"]
+        direction TB
+        n11["Phase 11: Evaluation\nF1 · Confusion Matrix"]
+        n12["Phase 12: Visualisasi\nWord Cloud · Chart"]
+        n13["Phase 13: Advanced NLP\nSummarizasi"]
+        n11 --> n12 --> n13
+    end
+
+    NB1 --> NB2 --> NB3 --> NB4
+    n4ao --> n5a
+    n4bo --> n5b
+    n4ao --> n8a
+    n2o --> n6
+    n2o --> n7
+    n2o --> n8b
+    n5a --> n9a
+    n4bo --> n9b
+    n9a --> n10a
+    n9b --> n10b
+    NB10 --> NB11_13
+
+    style NB4 fill:#1A237E,color:#fff
+    style n4ao fill:#1B5E20,color:#fff
+    style n4bo fill:#E65100,color:#fff
+    style n5b fill:#424242,color:#aaa
+    style n10c fill:#4A148C,color:#fff
+```
+
+---
+
+### Tabel Ringkasan Track per Phase
+
+| Phase | Notebook | Track A (`text_clean`) | Track B (`text_bert`) | Raw Content |
+| :---: | :--- | :--- | :--- | :--- |
+| 1 | `1. ScrappingArtikelLPDP.ipynb` | 🔀 shared | 🔀 shared | 🔀 shared |
+| 2 | `2. ScrappingKontenLPDP.ipynb` | 🔀 shared | 🔀 shared | 🔀 shared |
+| 3 | `3. TopicModellingLPDP.ipynb` | 🔀 shared | 🔀 shared | 🔀 shared |
+| 4 | `4. PreprocessingLPDP.ipynb` | ✅ heavy (10 step) | ✅ minimal (`preprocess_for_bert`) | — |
+| 5 | `5_FeatureExtraction.ipynb` | ✅ TF-IDF / BoW | 🚫 skip | — |
+| 6 | `6_NER.ipynb` | — | — | ✅ independen |
+| 7 | `7_POSTagging.ipynb` | — | — | ✅ independen |
+| 8 | `8_SentimenLeksikon.ipynb` | ✅ InSet | — | ✅ TextBlob |
+| 9 | `9_TrainTestSplit.ipynb` | ✅ split X_tfidf | ✅ split text_bert | — |
+| 10 | `10_ModelTraining.ipynb` | ✅ NB/LR/SVC (Tier 1) | ✅ IndoBERT ft (Tier 2) | — |
+| 11 | `11_Evaluation.ipynb` | ✅ merge hasil | ✅ merge hasil | — |
+| 12 | `12_Visualisasi.ipynb` | ✅ merge hasil | ✅ merge hasil | — |
+| 13 | `13_AdvancedNLP.ipynb` | — | — | ✅ summarizasi |
 
 ---
 
@@ -112,10 +258,12 @@ flowchart TD
   - [x] Visualisasi dan interpretasi topik
   - [x] Export artefak final (`bertopic_4_topik_final.xlsx`, `bertopic_topic_info.xlsx`, `bertopic_topic_per_chunk.xlsx`, `bertopic_chunks_data.pkl`)
 - [x] **Phase 4 — Preprocessing** (PIC: Iqbal)
-  - [x] Implementasi pipeline 10 langkah
+  - [x] **Track A (TF-IDF/BoW):** Implementasi pipeline 10 langkah heavy preprocessing
   - [x] Buat kamus slang Indonesia (`slang_id.csv`, 114 entri)
   - [x] Validasi output `text_clean` (0 NaN, 0 empty)
-  - [x] Export `dataset_lpdp_preprocessed.csv` (1.038 baris)
+  - [x] Export `dataset_lpdp_preprocessed.csv` (1.038 baris, kolom `text_clean`)
+  - [ ] **Track B (IndoBERT):** Implementasi pipeline minimal — NO stemming, NO stopword removal, NO lowercase, NO manual tokenization
+  - [ ] Export `dataset_lpdp_preprocessed_bert.csv` (1.038 baris, kolom `text_bert`)
 - [ ] **Phase 5 — Feature Extraction** (PIC: Salwa)
   - [ ] TF-IDF vectorization (n-gram)
   - [ ] Bag of Words baseline
@@ -490,27 +638,77 @@ topic_model.visualize_heatmap()
 
 ## Phase 4: Preprocessing
 
-### Pipeline 10 Langkah
+> ⚠️ **PENTING:** Karena pipeline ini menggunakan **IndoBERT** (fine-tuning transformer), preprocessing **TIDAK boleh disamaratakan**. Ada langkah yang **wajib dilakukan** dan ada langkah yang **dilarang keras** khusus untuk IndoBERT. Phase 4 dibagi menjadi **dua track terpisah**.
+
+---
+
+### Aturan Preprocessing untuk IndoBERT
+
+#### ✅ WAJIB DILAKUKAN (untuk Track B / IndoBERT)
+
+| # | Langkah | Alasan |
+| :--- | :--- | :--- |
+| 1 | **Remove HTML tags & artefak scraping** | Tag `<p>`, `<br>`, `&amp;` adalah noise murni dari proses scraping; tidak ada makna semantik |
+| 2 | **Remove URL** (`http://`, `https://`, `www.`) | URL bukan kata alami dan merusak distribusi token |
+| 3 | **Remove mention & hashtag** (`@user`, `#topik`) | Artefak media sosial yang tidak ada dalam domain pre-training IndoBERT berita |
+| 4 | **Normalisasi whitespace** | Spasi ganda, newline berlebih, tab → satu spasi; IndoBERT sensitif terhadap input yang bersih |
+| 5 | **Fix encoding/Unicode** | Mojibake (`â€œ` → `"`) dan karakter kontrol merusak tokenizer |
+| 6 | **Truncate via IndoBERT tokenizer** (`max_length=512, truncation=True`) | IndoBERT hanya menerima maksimal 512 token; truncation **wajib dilakukan di tokenizer**, bukan manual |
+| 7 | **Gunakan `AutoTokenizer` dari `indobenchmark/indobert-base-p1`** | IndoBERT punya WordPiece vocabulary sendiri; tidak boleh diganti NLTK |
+
+#### 🚫 HARAM DILAKUKAN (Fatal untuk IndoBERT)
+
+| # | Langkah | Mengapa Merusak IndoBERT |
+| :--- | :--- | :--- |
+| 1 | **Stemming** (Sastrawi) | IndoBERT dilatih pada teks asli berimbuhan. `"pendidikan"` → `"didik"` menghancurkan makna. WordPiece sudah menangani morfologi secara internal |
+| 2 | **Stopword removal** | BERT menggunakan **semua token** termasuk kata fungsi (`"yang"`, `"di"`, `"dan"`) untuk membangun representasi kontekstual via attention mechanism. Menghapusnya = memotong sinyal gramatikal |
+| 3 | **Case folding / Lowercasing** | IndoBERT bukan `indobert-base-uncased`. Model dilatih dengan teks mixed-case. `"LPDP"` ≠ `"lpdp"` — huruf kapital membawa sinyal Named Entity |
+| 4 | **Tokenisasi manual (NLTK word_tokenize)** | IndoBERT menggunakan WordPiece tokenizer internal. Jika teks di-tokenisasi manual dulu, tokenizer BERT akan salah memproses hasilnya |
+| 5 | **Rare word removal** | IndoBERT menangani OOV via subword splitting (`"penerima"` → `["pen", "##erima"]`). Membuang kata langka sebelum masuk BERT = kehilangan informasi sia-sia |
+| 6 | **Aggressive punctuation removal** | Tanda baca (`.`, `,`, `"`) membawa makna gramatikal yang dimanfaatkan attention BERT. Hapus hanya karakter non-ASCII yang benar-benar noise |
+| 7 | **Join tokens kembali ke string setelah tokenisasi manual** | IndoBERT harus menerima **raw string**, bukan string hasil join dari list NLTK token |
+
+---
+
+### Dual Track Pipeline
 
 ```mermaid
 flowchart TD
-    A["Input: Teks Artikel Mentah"] --> B["1. Case Folding\n(lowercase semua teks)"]
-    B --> C["2. Remove URL\n(http/https/www)"]
-    C --> D["3. Remove Mention & Hashtag\n(@user, #topic)"]
-    D --> E["4. Remove Digit & Punctuation\n(angka, tanda baca)"]
-    E --> F["5. Slang Normalization\n(kamus slang Indonesia)"]
-    F --> G["6. Tokenization\n(word_tokenize NLTK)"]
-    G --> H["7. Stopword Removal\n(NLTK ID 757 kata + Sastrawi)"]
-    H --> I["8. Stemming\n(Sastrawi - rule-based)"]
-    I --> J["9. Rare Word Removal\n(frekuensi < threshold)"]
-    J --> K["10. Join Tokens\n(gabung kembali jadi string)"]
-    K --> L["Output: text_clean"]
+    RAW["Input: Teks Artikel Mentah\n(Content dari scraping)"] --> SPLIT{Tujuan\nPreprocessing?}
 
-    style A fill:#FF9800,color:#fff
-    style L fill:#4CAF50,color:#fff
+    SPLIT -->|"Track A\nTF-IDF / BoW\nBaseline Models"| A1
+    SPLIT -->|"Track B\nIndoBERT\nFine-tuning"| B1
+
+    subgraph TRACK_A ["Track A — Heavy Preprocessing (DONE ✅)"]
+        A1["1. Case Folding (lowercase)"] --> A2
+        A2["2. Remove URL"] --> A3
+        A3["3. Remove Mention & Hashtag"] --> A4
+        A4["4. Remove Digit & Punctuation"] --> A5
+        A5["5. Slang Normalization"] --> A6
+        A6["6. Tokenization (NLTK)"] --> A7
+        A7["7. Stopword Removal (NLTK ID + Sastrawi)"] --> A8
+        A8["8. Stemming (Sastrawi)"] --> A9
+        A9["9. Rare Word Removal (freq < 2)"] --> A10
+        A10["10. Join Tokens"] --> OUTA["Output: text_clean\ndataset_lpdp_preprocessed.csv"]
+    end
+
+    subgraph TRACK_B ["Track B — Minimal Preprocessing (TODO)"]
+        B1["1. Fix HTML & Encoding"] --> B2
+        B2["2. Remove URL"] --> B3
+        B3["3. Remove Mention & Hashtag"] --> B4
+        B4["4. Normalisasi Whitespace"] --> OUTB["Output: text_bert\ndataset_lpdp_preprocessed_bert.csv"]
+    end
+
+    style RAW fill:#FF9800,color:#fff
+    style OUTA fill:#4CAF50,color:#fff
+    style OUTB fill:#2196F3,color:#fff
+    style TRACK_A fill:#f5f5f5
+    style TRACK_B fill:#e3f2fd
 ```
 
-### Detail Tiap Langkah
+---
+
+### Track A — Detail Tiap Langkah (Heavy Preprocessing untuk TF-IDF/BoW)
 
 | Step | Teknik | Library | Contoh |
 | :--- | :--- | :--- | :--- |
@@ -518,31 +716,74 @@ flowchart TD
 | 2 | Remove URL | `re.sub(r'https?://\S+', '')` | Hapus link dalam teks |
 | 3 | Remove mention/hashtag | `re.sub(r'[@#]\w+', '')` | `"@kompas #LPDP"` → `""` |
 | 4 | Remove digit & punctuation | `re.sub`, `string.punctuation` | `"tahun 2024!"` → `"tahun"` |
-| 5 | Slang normalization | Kamus custom (CSV) | `"gak"` → `"tidak"`, `"bgt"` → `"banget"` |
+| 5 | Slang normalization | Kamus custom `slang_id.csv` (114 entri) | `"gak"` → `"tidak"`, `"bgt"` → `"banget"` |
 | 6 | Tokenization | `nltk.word_tokenize()` | `"alumni lpdp sukses"` → `["alumni", "lpdp", "sukses"]` |
 | 7 | Stopword removal | NLTK Indonesian (757 kata) + Sastrawi | Hapus: `"yang"`, `"dan"`, `"di"`, `"ini"` |
 | 8 | Stemming | `Sastrawi.StemmerFactory` | `"pendidikan"` → `"didik"`, `"penerima"` → `"terima"` |
 | 9 | Rare word removal | Frequency threshold (< 2) | Hapus kata yang muncul hanya 1× di seluruh korpus |
 | 10 | Join tokens | `' '.join(tokens)` | `["alumni", "lpdp"]` → `"alumni lpdp"` |
 
-### Catatan untuk Bahasa Indonesia
+### Track B — Detail Langkah Minimal (IndoBERT)
 
-- **Sastrawi** lebih cocok daripada Porter/Snowball karena memahami morfologi Indonesia (imbuhan me-, di-, ke-an, pe-an, dll.)
-- **Slang dictionary** penting karena artikel berita sering mengutip komentar netizen yang mengandung bahasa informal
-- **Stopword list** perlu di-augment dengan domain-specific stopwords jika ditemukan noise berulang
+| Step | Teknik | Library | Contoh |
+| :--- | :--- | :--- | :--- |
+| 1 | Fix HTML & encoding | `html.unescape()`, `BeautifulSoup` | `"&amp;` → `"&"`, `<p>teks</p>` → `"teks"` |
+| 2 | Remove URL | `re.sub(r'https?://\S+\|www\.\S+', '')` | Hapus link |
+| 3 | Remove mention/hashtag | `re.sub(r'[@#]\w+', '')` | Noise media sosial |
+| 4 | Normalisasi whitespace | `re.sub(r'\s+', ' ').strip()` | Newline & spasi ganda → satu spasi |
+
+```python
+import re
+import html
+from bs4 import BeautifulSoup
+
+def preprocess_for_bert(text: str) -> str:
+    """Minimal preprocessing untuk IndoBERT. JANGAN tambahkan stemming/stopword/lowercase."""
+    # 1. Fix HTML entities dan tag
+    text = html.unescape(text)
+    text = BeautifulSoup(text, "html.parser").get_text()
+    # 2. Remove URL
+    text = re.sub(r'https?://\S+|www\.\S+', ' ', text)
+    # 3. Remove mention & hashtag
+    text = re.sub(r'[@#]\w+', ' ', text)
+    # 4. Normalisasi whitespace (BUKAN lowercase!)
+    text = re.sub(r'\s+', ' ', text).strip()
+    return text
+
+df['text_bert'] = df['Content'].apply(preprocess_for_bert)
+
+# Truncation diserahkan ke tokenizer IndoBERT, BUKAN di sini:
+# tokenizer(text_bert, max_length=512, truncation=True, padding='max_length')
+```
+
+> ⚠️ **CATATAN KRITIS:** `text_bert` tetap mengandung huruf kapital, tanda baca, stopword, dan kata berimbuhan. Ini **benar dan disengaja**. IndoBERT membutuhkan teks senatural mungkin.
+
+### Ringkasan Perbandingan Dua Track
+
+| Aspek | Track A (TF-IDF/BoW) | Track B (IndoBERT) |
+| :--- | :--- | :--- |
+| **Case folding** | ✅ Wajib | 🚫 Dilarang |
+| **Stopword removal** | ✅ Wajib | 🚫 Dilarang |
+| **Stemming** | ✅ Wajib | 🚫 Dilarang |
+| **Tokenisasi manual (NLTK)** | ✅ Digunakan | 🚫 Dilarang |
+| **Remove URL/Mention/HTML** | ✅ Wajib | ✅ Wajib |
+| **Normalisasi whitespace** | ✅ Wajib | ✅ Wajib |
+| **Rare word removal** | ✅ Digunakan | 🚫 Dilarang |
+| **Truncation** | Manual (karakter) | ✅ Via tokenizer (`max_length=512`) |
+| **Output** | `text_clean` | `text_bert` |
+| **File** | `dataset_lpdp_preprocessed.csv` | `dataset_lpdp_preprocessed_bert.csv` |
+| **Status** | ✅ Selesai | ⬜ Perlu dikerjakan |
 
 ### Hasil Aktual Notebook 4 (Final)
 
-Notebook 4 telah selesai disiapkan end-to-end dan output preprocessing sudah dihasilkan:
-
-| Item | Hasil |
-| :--- | :--- |
-| Input preprocessing | `output_bertopic/bertopic_4_topik_final.xlsx` (1.038 artikel) |
-| Output preprocessing | `dataset_lpdp_preprocessed.csv` (1.038 baris) |
-| Kolom utama output | `text_clean` |
-| Validasi `text_clean` | 0 NaN, 0 empty string |
-| Kamus slang | `slang_id.csv` (114 entri) |
-| Status siap lanjut | ✅ Siap untuk Phase 5 (Feature Extraction) |
+| Item | Track A (TF-IDF/BoW) | Track B (IndoBERT) |
+| :--- | :--- | :--- |
+| Input | `output_bertopic/bertopic_4_topik_final.xlsx` (1.038 artikel) | Sama |
+| Output | `dataset_lpdp_preprocessed.csv` | `dataset_lpdp_preprocessed_bert.csv` (TODO) |
+| Kolom utama | `text_clean` | `text_bert` |
+| Validasi | 0 NaN, 0 empty string | — |
+| Kamus slang | `slang_id.csv` (114 entri) | Tidak digunakan |
+| Status | ✅ Selesai | ⬜ Perlu dikerjakan |
 
 ---
 
