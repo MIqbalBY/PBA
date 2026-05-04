@@ -25,19 +25,20 @@
 
 ## Gambaran Umum
 
-| Item | Detail |
-| :--- | :--- |
-| **Tujuan** | Mengklasifikasikan sentimen artikel berita LPDP (Positive / Negative / Neutral) menggunakan teknik NLP |
-| **Bahasa** | Indonesia |
-| **Sumber Data** | Google News RSS via library GNews |
-| **Jumlah Artikel Scraped** | 1.937 artikel |
-| **Jumlah Artikel Valid** | 1.370 artikel (setelah validasi URL manual) |
-| **Jumlah Artikel Berlabel** | 1.370 artikel (100% dari artikel valid — labeling selesai) |
-| **Distribusi Label** | Positive: 462 (33,7%) · Neutral: 506 (36,9%) · Negative: 402 (29,3%) |
-| **Jumlah Artikel dengan Konten** | 1.038 artikel ✅ (`dataset_lpdp_konten_raw.csv` — Phase 2 scraping selesai) |
-| **Distribusi Label (Scraped)** | Positive: 385 (37,1%) · Neutral: 342 (33,0%) · Negative: 311 (30,0%) |
-| **Labeling** | Manual di Google Sheets (3 kelas: Positive, Negative, Neutral) |
-| **Output Akhir** | Model klasifikasi sentimen + laporan evaluasi performa |
+
+| Item                             | Detail                                                                                                 |
+| :------------------------------- | :----------------------------------------------------------------------------------------------------- |
+| **Tujuan**                       | Mengklasifikasikan sentimen artikel berita LPDP (Positive / Negative / Neutral) menggunakan teknik NLP |
+| **Bahasa**                       | Indonesia                                                                                              |
+| **Sumber Data**                  | Google News RSS via library GNews                                                                      |
+| **Jumlah Artikel Scraped**       | 1.937 artikel                                                                                          |
+| **Jumlah Artikel Valid**         | 1.370 artikel (setelah validasi URL manual)                                                            |
+| **Jumlah Artikel Berlabel**      | 1.370 artikel (100% dari artikel valid — labeling selesai)                                            |
+| **Distribusi Label**             | Positive: 462 (33,7%) · Neutral: 506 (36,9%) · Negative: 402 (29,3%)                                 |
+| **Jumlah Artikel dengan Konten** | 1.038 artikel ✅ (`dataset_lpdp_konten_raw.csv` — Phase 2 scraping selesai)                           |
+| **Distribusi Label (Scraped)**   | Positive: 385 (37,1%) · Neutral: 342 (33,0%) · Negative: 311 (30,0%)                                 |
+| **Labeling**                     | Manual di Google Sheets (3 kelas: Positive, Negative, Neutral)                                         |
+| **Output Akhir**                 | Model klasifikasi sentimen + laporan evaluasi performa                                                 |
 
 ---
 
@@ -203,21 +204,22 @@ flowchart LR
 
 ### Tabel Ringkasan Track per Phase
 
-| Phase | Notebook | Track A (`text_clean`) | Track B (`text_bert`) | Raw Content |
-| :---: | :--- | :--- | :--- | :--- |
-| 1 | `1. ScrappingArtikelLPDP.ipynb` | 🔀 shared | 🔀 shared | 🔀 shared |
-| 2 | `2. ScrappingKontenLPDP.ipynb` | 🔀 shared | 🔀 shared | 🔀 shared |
-| 3 | `3. TopicModellingLPDP.ipynb` | 🔀 shared | 🔀 shared | 🔀 shared |
-| 4 | `4. PreprocessingLPDP.ipynb` | ✅ heavy (10 step) | ✅ minimal (`preprocess_for_bert`) | — |
-| 5 | `5_FeatureExtraction.ipynb` | ✅ TF-IDF / BoW | 🚫 skip | — |
-| 6 | `6_NER.ipynb` | — | — | ✅ independen |
-| 7 | `7_POSTagging.ipynb` | — | — | ✅ independen |
-| 8 | `8_SentimenLeksikon.ipynb` | ✅ InSet | — | ✅ TextBlob |
-| 9 | `9_TrainTestSplit.ipynb` | ✅ split X_tfidf | ✅ split text_bert | — |
-| 10 | `10_ModelTraining.ipynb` | ✅ NB/LR/SVC (Tier 1) | ✅ IndoBERT ft (Tier 2) | — |
-| 11 | `11_Evaluation.ipynb` | ✅ merge hasil | ✅ merge hasil | — |
-| 12 | `12_Visualisasi.ipynb` | ✅ merge hasil | ✅ merge hasil | — |
-| 13 | `13_AdvancedNLP.ipynb` | — | — | ✅ summarizasi |
+
+| Phase | Notebook                        | Track A (`text_clean`) | Track B (`text_bert`)              | Raw Content    |
+| :---: | :------------------------------ | :--------------------- | :--------------------------------- | :------------- |
+|   1   | `1. ScrappingArtikelLPDP.ipynb` | 🔀 shared              | 🔀 shared                          | 🔀 shared      |
+|   2   | `2. ScrappingKontenLPDP.ipynb`  | 🔀 shared              | 🔀 shared                          | 🔀 shared      |
+|   3   | `3. TopicModellingLPDP.ipynb`   | 🔀 shared              | 🔀 shared                          | 🔀 shared      |
+|   4   | `4. PreprocessingLPDP.ipynb`    | ✅ heavy (10 step)     | ✅ minimal (`preprocess_for_bert`) | —             |
+|   5   | `5_FeatureExtraction.ipynb`     | ✅ TF-IDF / BoW        | 🚫 skip                            | —             |
+|   6   | `6_NER.ipynb`                   | —                     | —                                 | ✅ independen  |
+|   7   | `7_POSTagging.ipynb`            | —                     | —                                 | ✅ independen  |
+|   8   | `8_SentimenLeksikon.ipynb`      | ✅ InSet               | —                                 | ✅ TextBlob    |
+|   9   | `9_TrainTestSplit.ipynb`        | ✅ split X_tfidf       | ✅ split text_bert                 | —             |
+|  10  | `10_ModelTraining.ipynb`        | ✅ NB/LR/SVC (Tier 1)  | ✅ IndoBERT ft (Tier 2)            | —             |
+|  11  | `11_Evaluation.ipynb`           | ✅ merge hasil         | ✅ merge hasil                     | —             |
+|  12  | `12_Visualisasi.ipynb`          | ✅ merge hasil         | ✅ merge hasil                     | —             |
+|  13  | `13_AdvancedNLP.ipynb`          | —                     | —                                 | ✅ summarizasi |
 
 ---
 
@@ -225,79 +227,80 @@ flowchart LR
 
 ### Pembagian PIC per Phase
 
-| PIC | Phase Utama | Tanggung Jawab |
-| :--- | :--- | :--- |
-| **Iqbal** | Phase 1, 4, 9 | Scraping GNews, preprocessing, train/test split |
-| **Amel** | Phase 2, 7, 13 | Validasi URL + labeling manual, POS Tagging, advanced NLP |
+
+| PIC        | Phase Utama    | Tanggung Jawab                                                  |
+| :--------- | :------------- | :-------------------------------------------------------------- |
+| **Iqbal**  | Phase 1, 4, 9  | Scraping GNews, preprocessing, train/test split                 |
+| **Amel**   | Phase 2, 7, 13 | Validasi URL + labeling manual, POS Tagging, advanced NLP       |
 | **Celine** | Phase 3, 8, 11 | BERTopic topic discovery, sentimen leksikon, evaluation metrics |
-| **Nida** | Phase 6, 12 | NER, visualization dan analisis |
-| **Salwa** | Phase 5, 10 | Feature extraction, model training (baseline + IndoBERT) |
+| **Nida**   | Phase 6, 12    | NER, visualization dan analisis                                 |
+| **Salwa**  | Phase 5, 10    | Feature extraction, model training (baseline + IndoBERT)        |
 
 ### Checklist Detail
 
-- [x] **Phase 1 — Scraping** (PIC: Iqbal)
-  - [x] Konfigurasi 20 keywords GNews
-  - [x] Jalankan scraping + deduplikasi
-  - [x] Export `dataset_lpdp_sorted.csv`
-- [X] **Phase 2 — Validasi dan Labeling** (PIC: Amel)
-  - [x] Import CSV ke Google Sheets
-  - [x] Amel: validasi + labeling baris 2–389 (312/312 valid ✅)
-  - [x] Celine: validasi + labeling baris 390–777 (315/315 valid ✅)
-  - [x] Iqbal: validasi + labeling baris 778–1164 (332/332 valid ✅)
-  - [x] Nida: validasi + labeling baris 1165–1551 (270/270 valid ✅)
-  - [x] Salwa: validasi + labeling baris 1552–1938 (335/335 valid ✅)
-  - [x] Rekonsiliasi label antar annotator
-  - [x] Scraping konten artikel (`newspaper3k`) → **1.038/1.370 artikel berhasil (75,8%)**
-  - [x] Export `dataset_lpdp_konten_raw.csv` (Positive: 385 · Neutral: 342 · Negative: 311)
-- [x] **Phase 3 — BERTopic** (PIC: Celine)
-  - [x] Install BERTopic + sentence-transformers
-  - [x] Fit model pada artikel valid
-  - [x] Reduce ke 4 topik utama
-  - [x] Visualisasi dan interpretasi topik
-  - [x] Export artefak final (`bertopic_4_topik_final.xlsx`, `bertopic_topic_info.xlsx`, `bertopic_topic_per_chunk.xlsx`, `bertopic_chunks_data.pkl`)
-- [x] **Phase 4 — Preprocessing** (PIC: Iqbal)
-  - [x] **Track A (TF-IDF/BoW):** Implementasi pipeline 10 langkah heavy preprocessing
-  - [x] Buat kamus slang Indonesia (`slang_id.csv`, 114 entri)
-  - [x] Validasi output `text_clean` (0 NaN, 0 empty)
-  - [x] Export `dataset_lpdp_preprocessed.csv` (1.038 baris, kolom `text_clean`)
-  - [x] **Track B (IndoBERT):** Implementasi pipeline minimal — NO stemming, NO stopword removal, NO lowercase, NO manual tokenization
-  - [x] Export `dataset_lpdp_preprocessed_bert.csv` (1.038 baris, kolom `text_bert`)
-- [ ] **Phase 5 — Feature Extraction** (PIC: Salwa)
-  - [ ] TF-IDF vectorization (n-gram)
-  - [ ] Bag of Words baseline
-  - [ ] IndoBERT embeddings ([CLS] token)
-- [ ] **Phase 6 — NER** (PIC: Nida)
-  - [ ] Install transformers + spaCy
-  - [ ] Load `cahya/bert-base-indonesian-NER`
-  - [ ] Ekstrak entitas (PER, ORG, LOC) dari artikel
-  - [ ] Analisis frekuensi entitas per tipe
-- [ ] **Phase 7 — POS Tagging** (PIC: Amel)
-  - [ ] Install Stanza + download model `id` (~500MB)
-  - [ ] POS tagging seluruh artikel dengan Stanza
-  - [ ] Analisis distribusi POS tag (NOUN, VERB, ADJ)
-- [ ] **Phase 8 — Analisis Sentimen Berbasis Leksikon** (PIC: Celine)
-  - [ ] Install TextBlob + download InSet lexicon (positive.tsv, negative.tsv)
-  - [ ] Hitung polarity TextBlob per artikel (Content)
-  - [ ] Hitung skor InSet per artikel (text_clean)
-  - [ ] Evaluasi TextBlob vs label manual
-  - [ ] Evaluasi InSet vs label manual
-- [ ] **Phase 9 — Train/Test Split** (PIC: Iqbal)
-  - [ ] Stratified split 80:20
-  - [ ] Verifikasi distribusi label di train dan test
-- [ ] **Phase 10 — Model Training** (PIC: Salwa)
-  - [ ] Tier 1: Naive Bayes, Logistic Regression, Linear SVC
-  - [ ] Tier 2: IndoBERT fine-tuning (5 epoch)
-  - [ ] Tier 3 (Opsional): RAG-based data augmentation jika F1 kelas minority < 0.60
-- [ ] **Phase 11 — Evaluation** (PIC: Celine)
-  - [ ] Classification report per model
-  - [ ] Confusion matrix visualization
-  - [ ] Perbandingan F1 weighted antar model
-- [ ] **Phase 12 — Visualization** (PIC: Nida)
-  - [ ] Distribusi sentimen (bar chart)
-  - [ ] Word cloud per sentimen
-  - [ ] Tren temporal + sentimen per media
-- [ ] **Phase 13 — Advanced NLP** (PIC: Amel)
-  - [ ] Extractive summarization
+- [X]  **Phase 1 — Scraping** (PIC: Iqbal)
+  - [X]  Konfigurasi 20 keywords GNews
+  - [X]  Jalankan scraping + deduplikasi
+  - [X]  Export `dataset_lpdp_sorted.csv`
+- [X]  **Phase 2 — Validasi dan Labeling** (PIC: Amel)
+  - [X]  Import CSV ke Google Sheets
+  - [X]  Amel: validasi + labeling baris 2–389 (312/312 valid ✅)
+  - [X]  Celine: validasi + labeling baris 390–777 (315/315 valid ✅)
+  - [X]  Iqbal: validasi + labeling baris 778–1164 (332/332 valid ✅)
+  - [X]  Nida: validasi + labeling baris 1165–1551 (270/270 valid ✅)
+  - [X]  Salwa: validasi + labeling baris 1552–1938 (335/335 valid ✅)
+  - [X]  Rekonsiliasi label antar annotator
+  - [X]  Scraping konten artikel (`newspaper3k`) → **1.038/1.370 artikel berhasil (75,8%)**
+  - [X]  Export `dataset_lpdp_konten_raw.csv` (Positive: 385 · Neutral: 342 · Negative: 311)
+- [X]  **Phase 3 — BERTopic** (PIC: Celine)
+  - [X]  Install BERTopic + sentence-transformers
+  - [X]  Fit model pada artikel valid
+  - [X]  Reduce ke 4 topik utama
+  - [X]  Visualisasi dan interpretasi topik
+  - [X]  Export artefak final (`bertopic_4_topik_final.xlsx`, `bertopic_topic_info.xlsx`, `bertopic_topic_per_chunk.xlsx`, `bertopic_chunks_data.pkl`)
+- [X]  **Phase 4 — Preprocessing** (PIC: Iqbal)
+  - [X]  **Track A (TF-IDF/BoW):** Implementasi pipeline 10 langkah heavy preprocessing
+  - [X]  Buat kamus slang Indonesia (`slang_id.csv`, 114 entri)
+  - [X]  Validasi output `text_clean` (0 NaN, 0 empty)
+  - [X]  Export `dataset_lpdp_preprocessed.csv` (1.038 baris, kolom `text_clean`)
+  - [X]  **Track B (IndoBERT):** Implementasi pipeline minimal — NO stemming, NO stopword removal, NO lowercase, NO manual tokenization
+  - [X]  Export `dataset_lpdp_preprocessed_bert.csv` (1.038 baris, kolom `text_bert`)
+- [X]  **Phase 5 — Feature Extraction** (PIC: Salwa)
+  - [X]  TF-IDF vectorization (n-gram)
+  - [X]  Bag of Words baseline
+  - [X]  IndoBERT embeddings ([CLS] token)
+- [X]  **Phase 6 — NER** (PIC: Nida)
+  - [X]  Install transformers + spaCy
+  - [X]  Load `cahya/bert-base-indonesian-NER`
+  - [X]  Ekstrak entitas (PER, ORG, LOC) dari artikel
+  - [X]  Analisis frekuensi entitas per tipe
+- [ ]  **Phase 7 — POS Tagging** (PIC: Amel)
+  - [ ]  Install Stanza + download model `id` (~500MB)
+  - [ ]  POS tagging seluruh artikel dengan Stanza
+  - [ ]  Analisis distribusi POS tag (NOUN, VERB, ADJ)
+- [ ]  **Phase 8 — Analisis Sentimen Berbasis Leksikon** (PIC: Celine)
+  - [ ]  Install TextBlob + download InSet lexicon (positive.tsv, negative.tsv)
+  - [ ]  Hitung polarity TextBlob per artikel (Content)
+  - [ ]  Hitung skor InSet per artikel (text_clean)
+  - [ ]  Evaluasi TextBlob vs label manual
+  - [ ]  Evaluasi InSet vs label manual
+- [ ]  **Phase 9 — Train/Test Split** (PIC: Iqbal)
+  - [ ]  Stratified split 80:20
+  - [ ]  Verifikasi distribusi label di train dan test
+- [ ]  **Phase 10 — Model Training** (PIC: Salwa)
+  - [ ]  Tier 1: Naive Bayes, Logistic Regression, Linear SVC
+  - [ ]  Tier 2: IndoBERT fine-tuning (5 epoch)
+  - [ ]  Tier 3 (Opsional): RAG-based data augmentation jika F1 kelas minority < 0.60
+- [ ]  **Phase 11 — Evaluation** (PIC: Celine)
+  - [ ]  Classification report per model
+  - [ ]  Confusion matrix visualization
+  - [ ]  Perbandingan F1 weighted antar model
+- [ ]  **Phase 12 — Visualization** (PIC: Nida)
+  - [ ]  Distribusi sentimen (bar chart)
+  - [ ]  Word cloud per sentimen
+  - [ ]  Tren temporal + sentimen per media
+- [ ]  **Phase 13 — Advanced NLP** (PIC: Amel)
+  - [ ]  Extractive summarization
 
 ---
 
@@ -310,14 +313,15 @@ flowchart LR
 
 ### Strategi 20 Keywords (5 Kategori)
 
-| Kategori | Keywords |
-| :--- | :--- |
-| **General** | `LPDP`, `Beasiswa+LPDP`, `Program+LPDP` |
-| **Aktor** | `Awardee+LPDP`, `Alumni+LPDP`, `Mahasiswa+LPDP`, `Penerima+LPDP` |
-| **Konteks** | `Polemik+LPDP`, `Wawancara+LPDP`, `Pendaftar+LPDP`, `Seleksi+LPDP` |
-| **Cakupan** | `LPDP+Luar+Negeri`, `LPDP+S2`, `LPDP+S3`, `Kuliah+LPDP` |
-| **Waktu** | `LPDP+2024`, `LPDP+2023` |
-| **Campuran** | `Dana+LPDP`, `LPDP+Indonesia`, `Scholarship+LPDP` |
+
+| Kategori     | Keywords                                                           |
+| :----------- | :----------------------------------------------------------------- |
+| **General**  | `LPDP`, `Beasiswa+LPDP`, `Program+LPDP`                            |
+| **Aktor**    | `Awardee+LPDP`, `Alumni+LPDP`, `Mahasiswa+LPDP`, `Penerima+LPDP`   |
+| **Konteks**  | `Polemik+LPDP`, `Wawancara+LPDP`, `Pendaftar+LPDP`, `Seleksi+LPDP` |
+| **Cakupan**  | `LPDP+Luar+Negeri`, `LPDP+S2`, `LPDP+S3`, `Kuliah+LPDP`            |
+| **Waktu**    | `LPDP+2024`, `LPDP+2023`                                           |
+| **Campuran** | `Dana+LPDP`, `LPDP+Indonesia`, `Scholarship+LPDP`                  |
 
 ### Proses
 
@@ -355,48 +359,52 @@ flowchart LR
 
 ### Kriteria Validasi
 
-| Status | Kriteria |
-| :--- | :--- |
-| **Valid** | URL bisa diakses, konten relevan tentang LPDP, bukan duplikat |
+
+| Status      | Kriteria                                                                   |
+| :---------- | :------------------------------------------------------------------------- |
+| **Valid**   | URL bisa diakses, konten relevan tentang LPDP, bukan duplikat              |
 | **Invalid** | URL mati (404/403), redirect ke homepage, konten tidak relevan, video-only |
 
 ### Labeling Manual
 
 Setiap artikel yang valid diberi label sentimen berdasarkan **nada keseluruhan** artikel:
 
-| Label | Deskripsi | Contoh Topik |
-| :--- | :--- | :--- |
-| **Positive** | Artikel bernada positif, apresiatif, atau informatif-netral-positif | Kisah sukses alumni, pembukaan pendaftaran baru |
-| **Negative** | Artikel bernada kritis, negatif, atau kontroversial | Polemik paspor, pelanggaran kontrak, kritik publik |
-| **Neutral** | Artikel informatif murni tanpa tendensi emosional | Pengumuman resmi, data statistik, FAQ |
+
+| Label        | Deskripsi                                                           | Contoh Topik                                       |
+| :----------- | :------------------------------------------------------------------ | :------------------------------------------------- |
+| **Positive** | Artikel bernada positif, apresiatif, atau informatif-netral-positif | Kisah sukses alumni, pembukaan pendaftaran baru    |
+| **Negative** | Artikel bernada kritis, negatif, atau kontroversial                 | Polemik paspor, pelanggaran kontrak, kritik publik |
+| **Neutral**  | Artikel informatif murni tanpa tendensi emosional                   | Pengumuman resmi, data statistik, FAQ              |
 
 ### Progress Labeling (Per 20 April 2026)
 
 > ✅ **Status:** Labeling **selesai 100%** — semua artikel valid sudah dilabeli oleh seluruh anggota.
 
-| PIC | Total Baris | Artikel Valid | Terlabel | Positive | Neutral | Negative | Status |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Amel** | 388 | 312 | 312 | 55 | 135 | 122 | ✅ Selesai |
-| **Celine** | 388 | 315 | 315 | 81 | 130 | 104 | ✅ Selesai |
-| **Iqbal** | 387 | 332 | 332 | 197 | 89 | 46 | ✅ Selesai |
-| **Nida** | 387 | 270 | 270 | 122 | 55 | 93 | ✅ Selesai |
-| **Salwa** | 387 | 141 | 141 | 7 | 97 | 37 | ✅ Selesai |
-| **Total** | **1.937** | **1.370** | **1.370** | **462** | **506** | **402** | ✅ |
+
+| PIC        | Total Baris | Artikel Valid | Terlabel | Positive | Neutral | Negative | Status     |
+| :--------- | :---------: | :-----------: | :-------: | :------: | :-----: | :------: | :--------- |
+| **Amel**   |     388     |      312      |    312    |    55    |   135   |   122   | ✅ Selesai |
+| **Celine** |     388     |      315      |    315    |    81    |   130   |   104   | ✅ Selesai |
+| **Iqbal**  |     387     |      332      |    332    |   197   |   89   |    46    | ✅ Selesai |
+| **Nida**   |     387     |      270      |    270    |   122   |   55   |    93    | ✅ Selesai |
+| **Salwa**  |     387     |      141      |    141    |    7    |   97   |    37    | ✅ Selesai |
+| **Total**  |  **1.937**  |   **1.370**   | **1.370** | **462** | **506** | **402** | ✅         |
 
 ### Struktur Data Tervalidasi
 
 File Google Sheets diekspor sebagai CSV dengan kolom berikut. **Hanya baris `Valid? = TRUE`** yang diproses ke fase berikutnya:
 
-| Kolom | Tipe | Keterangan |
-| :--- | :--- | :--- |
-| `Title` | string | Judul artikel dari Google News |
-| `Release Date` | string | Tanggal rilis (format RFC 2822) |
-| `URL` | string | Link artikel asli |
-| `Publisher` | string | Nama media/publisher |
-| `PiC` | string | Anggota yang memvalidasi |
-| `Valid?` | boolean | `TRUE` = valid, `FALSE` = tidak valid |
-| `Sentiment` | string | Label: `Positive` / `Negative` / `Neutral` |
-| `Notes` | string | Catatan tambahan annotator |
+
+| Kolom          | Tipe    | Keterangan                                |
+| :------------- | :------ | :---------------------------------------- |
+| `Title`        | string  | Judul artikel dari Google News            |
+| `Release Date` | string  | Tanggal rilis (format RFC 2822)           |
+| `URL`          | string  | Link artikel asli                         |
+| `Publisher`    | string  | Nama media/publisher                      |
+| `PiC`          | string  | Anggota yang memvalidasi                  |
+| `Valid?`       | boolean | `TRUE` = valid, `FALSE` = tidak valid     |
+| `Sentiment`    | string  | Label:`Positive` / `Negative` / `Neutral` |
+| `Notes`        | string  | Catatan tambahan annotator                |
 
 **Contoh data valid:**
 
@@ -434,17 +442,19 @@ Google News RSS hanya menyediakan **deskripsi singkat** (1–2 kalimat snippet).
 
 #### Kenapa Perlu Content Extraction?
 
-| Data | Sumber | Panjang Rata-rata | Kualitas untuk NLP |
-| :--- | :--- | :--- | :--- |
-| `Deskripsi` | Google News RSS snippet | ~20–50 kata | Kurang — terlalu pendek |
-| `Content` | Scraping dari URL asli | ~200–1.000 kata | Baik — paragraf lengkap |
+
+| Data        | Sumber                  | Panjang Rata-rata | Kualitas untuk NLP       |
+| :---------- | :---------------------- | :---------------- | :----------------------- |
+| `Deskripsi` | Google News RSS snippet | ~20–50 kata      | Kurang — terlalu pendek |
+| `Content`   | Scraping dari URL asli  | ~200–1.000 kata  | Baik — paragraf lengkap |
 
 #### Library Ekstraksi Konten
 
-| Library | Keunggulan |
-| :--- | :--- |
+
+| Library         | Keunggulan                                                  |
+| :-------------- | :---------------------------------------------------------- |
 | **newspaper3k** | Otomatis extract judul, teks, tanggal; support multi-bahasa |
-| **trafilatura** | Lebih robust untuk edge case (paywall, JS-rendered) |
+| **trafilatura** | Lebih robust untuk edge case (paywall, JS-rendered)         |
 
 #### Implementasi Ekstraksi Konten
 
@@ -482,8 +492,9 @@ print(f"Content extracted: {success_rate:.1%}")
 
 #### Validasi Content
 
-| Metric | Target |
-| :--- | :--- |
+
+| Metric         | Target                        |
+| :------------- | :---------------------------- |
 | **Min length** | ≥ 50 karakter (filter noise) |
 
 ```python
@@ -502,20 +513,22 @@ print(df_valid['content_len'].describe())
 
 ### Distribusi Label (Artikel Valid — 1.370 Total)
 
-| Label | Jumlah | Proporsi |
-| :--- | :---: | :---: |
-| **Neutral** | 506 | 36,9% |
-| **Positive** | 462 | 33,7% |
-| **Negative** | 402 | 29,4% |
+
+| Label              |  Jumlah  | Proporsi |
+| :----------------- | :-------: | :------: |
+| **Neutral**        |    506    |  36,9%  |
+| **Positive**       |    462    |  33,7%  |
+| **Negative**       |    402    |  29,4%  |
 | **Total berlabel** | **1.370** | **100%** |
 
 ### Distribusi Label (Artikel Diekspor — `dataset_lpdp_konten_raw.csv` — 1.038 Total)
 
-| Label | Jumlah | Proporsi |
-| :--- | :---: | :---: |
-| **Positive** | 385 | 37,1% |
-| **Neutral** | 342 | 33,0% |
-| **Negative** | 311 | 30,0% |
+
+| Label              |  Jumlah  | Proporsi |
+| :----------------- | :-------: | :------: |
+| **Positive**       |    385    |  37,1%  |
+| **Neutral**        |    342    |  33,0%  |
+| **Negative**       |    311    |  30,0%  |
 | **Total diekspor** | **1.038** | **100%** |
 
 > **Catatan:** 332 artikel (24,2%) tidak berhasil di-scrape (URL mati, paywall, timeout) dan dikecualikan dari Phase 3.
@@ -533,13 +546,14 @@ Mengelompokkan **1.038 artikel yang berhasil di-scrape** (dari 1.370 valid) ke d
 
 ### Kenapa BERTopic, Bukan LDA?
 
-| Aspek | LDA (Tradisional) | BERTopic |
-| :--- | :--- | :--- |
-| **Representasi teks** | Bag-of-words | Contextual embeddings (transformer) |
-| **Kualitas topik** | Sering tercampur | Lebih koheren dan interpretable |
-| **Bahasa Indonesia** | Terbatas | Didukung via multilingual model |
-| **Visualisasi** | Manual (matplotlib) | Built-in (interaktif) |
-| **Tuning** | Banyak hyperparameter | Minimal, otomatis |
+
+| Aspek                 | LDA (Tradisional)     | BERTopic                            |
+| :-------------------- | :-------------------- | :---------------------------------- |
+| **Representasi teks** | Bag-of-words          | Contextual embeddings (transformer) |
+| **Kualitas topik**    | Sering tercampur      | Lebih koheren dan interpretable     |
+| **Bahasa Indonesia**  | Terbatas              | Didukung via multilingual model     |
+| **Visualisasi**       | Manual (matplotlib)   | Built-in (interaktif)               |
+| **Tuning**            | Banyak hyperparameter | Minimal, otomatis                   |
 
 ### Pipeline BERTopic
 
@@ -589,23 +603,25 @@ for topic_id in range(4):
 
 Notebook 3 telah selesai dijalankan dan menghasilkan model terbaik dengan konfigurasi berikut:
 
-| Komponen | Nilai |
-| :--- | :--- |
-| **Best model** | `min_cluster_size=150`, `min_samples=5` |
-| **Coherence metric** | **C_v = 0.8178** (gensim) |
-| **Jumlah artikel input** | 1.038 |
-| **Jumlah artikel terlabel topik** | 937 |
-| **Unlabeled (NaN)** | 101 |
-| **Coverage mapping topik** | 90,2% |
+
+| Komponen                          | Nilai                                   |
+| :-------------------------------- | :-------------------------------------- |
+| **Best model**                    | `min_cluster_size=150`, `min_samples=5` |
+| **Coherence metric**              | **C_v = 0.8178** (gensim)               |
+| **Jumlah artikel input**          | 1.038                                   |
+| **Jumlah artikel terlabel topik** | 937                                     |
+| **Unlabeled (NaN)**               | 101                                     |
+| **Coverage mapping topik**        | 90,2%                                   |
 
 Distribusi 4 label topik final:
 
-| Label Topik Final | Jumlah | Persentase (dari 937 labeled) |
-| :--- | :---: | :---: |
-| Kebijakan & Prioritas Program | 553 | 59,0% |
-| Kewajiban & Sanksi Penerima | 147 | 15,7% |
-| Pendaftaran & Seleksi LPDP | 140 | 14,9% |
-| Kontroversi Penerima Beasiswa | 97 | 10,4% |
+
+| Label Topik Final             | Jumlah | Persentase (dari 937 labeled) |
+| :---------------------------- | :----: | :---------------------------: |
+| Kebijakan & Prioritas Program |  553  |             59,0%             |
+| Kewajiban & Sanksi Penerima   |  147  |             15,7%             |
+| Pendaftaran & Seleksi LPDP    |  140  |             14,9%             |
+| Kontroversi Penerima Beasiswa |   97   |             10,4%             |
 
 ### Visualisasi Topik
 
@@ -644,27 +660,29 @@ topic_model.visualize_heatmap()
 
 #### ✅ WAJIB DILAKUKAN (untuk Track B / IndoBERT)
 
-| # | Langkah | Alasan |
-| :--- | :--- | :--- |
-| 1 | **Remove HTML tags & artefak scraping** | Tag `<p>`, `<br>`, `&amp;` adalah noise murni dari proses scraping; tidak ada makna semantik |
-| 2 | **Remove URL** (`http://`, `https://`, `www.`) | URL bukan kata alami dan merusak distribusi token |
-| 3 | **Remove mention & hashtag** (`@user`, `#topik`) | Artefak media sosial yang tidak ada dalam domain pre-training IndoBERT berita |
-| 4 | **Normalisasi whitespace** | Spasi ganda, newline berlebih, tab → satu spasi; IndoBERT sensitif terhadap input yang bersih |
-| 5 | **Fix encoding/Unicode** | Mojibake (`â€œ` → `"`) dan karakter kontrol merusak tokenizer |
-| 6 | **Truncate via IndoBERT tokenizer** (`max_length=512, truncation=True`) | IndoBERT hanya menerima maksimal 512 token; truncation **wajib dilakukan di tokenizer**, bukan manual |
-| 7 | **Gunakan `AutoTokenizer` dari `indobenchmark/indobert-base-p1`** | IndoBERT punya WordPiece vocabulary sendiri; tidak boleh diganti NLTK |
+
+| # | Langkah                                                                 | Alasan                                                                                               |
+| :- | :---------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------- |
+| 1 | **Remove HTML tags & artefak scraping**                                 | Tag`<p>`, `<br>`, `&amp;` adalah noise murni dari proses scraping; tidak ada makna semantik          |
+| 2 | **Remove URL** (`http://`, `https://`, `www.`)                          | URL bukan kata alami dan merusak distribusi token                                                    |
+| 3 | **Remove mention & hashtag** (`@user`, `#topik`)                        | Artefak media sosial yang tidak ada dalam domain pre-training IndoBERT berita                        |
+| 4 | **Normalisasi whitespace**                                              | Spasi ganda, newline berlebih, tab → satu spasi; IndoBERT sensitif terhadap input yang bersih       |
+| 5 | **Fix encoding/Unicode**                                                | Mojibake (`â€œ` → `"`) dan karakter kontrol merusak tokenizer                                    |
+| 6 | **Truncate via IndoBERT tokenizer** (`max_length=512, truncation=True`) | IndoBERT hanya menerima maksimal 512 token; truncation**wajib dilakukan di tokenizer**, bukan manual |
+| 7 | **Gunakan `AutoTokenizer` dari `indobenchmark/indobert-base-p1`**       | IndoBERT punya WordPiece vocabulary sendiri; tidak boleh diganti NLTK                                |
 
 #### 🚫 HARAM DILAKUKAN (Fatal untuk IndoBERT)
 
-| # | Langkah | Mengapa Merusak IndoBERT |
-| :--- | :--- | :--- |
-| 1 | **Stemming** (Sastrawi) | IndoBERT dilatih pada teks asli berimbuhan. `"pendidikan"` → `"didik"` menghancurkan makna. WordPiece sudah menangani morfologi secara internal |
-| 2 | **Stopword removal** | BERT menggunakan **semua token** termasuk kata fungsi (`"yang"`, `"di"`, `"dan"`) untuk membangun representasi kontekstual via attention mechanism. Menghapusnya = memotong sinyal gramatikal |
-| 3 | **Case folding / Lowercasing** | IndoBERT bukan `indobert-base-uncased`. Model dilatih dengan teks mixed-case. `"LPDP"` ≠ `"lpdp"` — huruf kapital membawa sinyal Named Entity |
-| 4 | **Tokenisasi manual (NLTK word_tokenize)** | IndoBERT menggunakan WordPiece tokenizer internal. Jika teks di-tokenisasi manual dulu, tokenizer BERT akan salah memproses hasilnya |
-| 5 | **Rare word removal** | IndoBERT menangani OOV via subword splitting (`"penerima"` → `["pen", "##erima"]`). Membuang kata langka sebelum masuk BERT = kehilangan informasi sia-sia |
-| 6 | **Aggressive punctuation removal** | Tanda baca (`.`, `,`, `"`) membawa makna gramatikal yang dimanfaatkan attention BERT. Hapus hanya karakter non-ASCII yang benar-benar noise |
-| 7 | **Join tokens kembali ke string setelah tokenisasi manual** | IndoBERT harus menerima **raw string**, bukan string hasil join dari list NLTK token |
+
+| # | Langkah                                                     | Mengapa Merusak IndoBERT                                                                                                                                                                     |
+| :- | :---------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1 | **Stemming** (Sastrawi)                                     | IndoBERT dilatih pada teks asli berimbuhan.`"pendidikan"` → `"didik"` menghancurkan makna. WordPiece sudah menangani morfologi secara internal                                              |
+| 2 | **Stopword removal**                                        | BERT menggunakan**semua token** termasuk kata fungsi (`"yang"`, `"di"`, `"dan"`) untuk membangun representasi kontekstual via attention mechanism. Menghapusnya = memotong sinyal gramatikal |
+| 3 | **Case folding / Lowercasing**                              | IndoBERT bukan`indobert-base-uncased`. Model dilatih dengan teks mixed-case. `"LPDP"` ≠ `"lpdp"` — huruf kapital membawa sinyal Named Entity                                               |
+| 4 | **Tokenisasi manual (NLTK word_tokenize)**                  | IndoBERT menggunakan WordPiece tokenizer internal. Jika teks di-tokenisasi manual dulu, tokenizer BERT akan salah memproses hasilnya                                                         |
+| 5 | **Rare word removal**                                       | IndoBERT menangani OOV via subword splitting (`"penerima"` → `["pen", "##erima"]`). Membuang kata langka sebelum masuk BERT = kehilangan informasi sia-sia                                  |
+| 6 | **Aggressive punctuation removal**                          | Tanda baca (`.`, `,`, `"`) membawa makna gramatikal yang dimanfaatkan attention BERT. Hapus hanya karakter non-ASCII yang benar-benar noise                                                  |
+| 7 | **Join tokens kembali ke string setelah tokenisasi manual** | IndoBERT harus menerima**raw string**, bukan string hasil join dari list NLTK token                                                                                                          |
 
 ---
 
@@ -708,27 +726,29 @@ flowchart TD
 
 ### Track A — Detail Tiap Langkah (Heavy Preprocessing untuk TF-IDF/BoW)
 
-| Step | Teknik | Library | Contoh |
-| :--- | :--- | :--- | :--- |
-| 1 | Case folding | Python `str.lower()` | `"Alumni LPDP"` → `"alumni lpdp"` |
-| 2 | Remove URL | `re.sub(r'https?://\S+', '')` | Hapus link dalam teks |
-| 3 | Remove mention/hashtag | `re.sub(r'[@#]\w+', '')` | `"@kompas #LPDP"` → `""` |
-| 4 | Remove digit & punctuation | `re.sub`, `string.punctuation` | `"tahun 2024!"` → `"tahun"` |
-| 5 | Slang normalization | Kamus custom `slang_id.csv` (114 entri) | `"gak"` → `"tidak"`, `"bgt"` → `"banget"` |
-| 6 | Tokenization | `nltk.word_tokenize()` | `"alumni lpdp sukses"` → `["alumni", "lpdp", "sukses"]` |
-| 7 | Stopword removal | NLTK Indonesian (757 kata) + Sastrawi | Hapus: `"yang"`, `"dan"`, `"di"`, `"ini"` |
-| 8 | Stemming | `Sastrawi.StemmerFactory` | `"pendidikan"` → `"didik"`, `"penerima"` → `"terima"` |
-| 9 | Rare word removal | Frequency threshold (< 2) | Hapus kata yang muncul hanya 1× di seluruh korpus |
-| 10 | Join tokens | `' '.join(tokens)` | `["alumni", "lpdp"]` → `"alumni lpdp"` |
+
+| Step | Teknik                     | Library                                | Contoh                                                   |
+| :--- | :------------------------- | :------------------------------------- | :------------------------------------------------------- |
+| 1    | Case folding               | Python`str.lower()`                    | `"Alumni LPDP"` → `"alumni lpdp"`                       |
+| 2    | Remove URL                 | `re.sub(r'https?://\S+', '')`          | Hapus link dalam teks                                    |
+| 3    | Remove mention/hashtag     | `re.sub(r'[@#]\w+', '')`               | `"@kompas #LPDP"` → `""`                                |
+| 4    | Remove digit & punctuation | `re.sub`, `string.punctuation`         | `"tahun 2024!"` → `"tahun"`                             |
+| 5    | Slang normalization        | Kamus custom`slang_id.csv` (114 entri) | `"gak"` → `"tidak"`, `"bgt"` → `"banget"`              |
+| 6    | Tokenization               | `nltk.word_tokenize()`                 | `"alumni lpdp sukses"` → `["alumni", "lpdp", "sukses"]` |
+| 7    | Stopword removal           | NLTK Indonesian (757 kata) + Sastrawi  | Hapus:`"yang"`, `"dan"`, `"di"`, `"ini"`                 |
+| 8    | Stemming                   | `Sastrawi.StemmerFactory`              | `"pendidikan"` → `"didik"`, `"penerima"` → `"terima"`  |
+| 9    | Rare word removal          | Frequency threshold (< 2)              | Hapus kata yang muncul hanya 1× di seluruh korpus       |
+| 10   | Join tokens                | `' '.join(tokens)`                     | `["alumni", "lpdp"]` → `"alumni lpdp"`                  |
 
 ### Track B — Detail Langkah Minimal (IndoBERT)
 
-| Step | Teknik | Library | Contoh |
-| :--- | :--- | :--- | :--- |
-| 1 | Fix HTML & encoding | `html.unescape()`, `BeautifulSoup` | `"&amp;` → `"&"`, `<p>teks</p>` → `"teks"` |
-| 2 | Remove URL | `re.sub(r'https?://\S+\|www\.\S+', '')` | Hapus link |
-| 3 | Remove mention/hashtag | `re.sub(r'[@#]\w+', '')` | Noise media sosial |
-| 4 | Normalisasi whitespace | `re.sub(r'\s+', ' ').strip()` | Newline & spasi ganda → satu spasi |
+
+| Step | Teknik                 | Library                            | Contoh                                       |
+| :--- | :--------------------- | :--------------------------------- | :------------------------------------------- |
+| 1    | Fix HTML & encoding    | `html.unescape()`, `BeautifulSoup` | `"&amp;` → `"&"`, `<p>teks</p>` → `"teks"` |
+| 2    | Remove URL             | `re.sub(r'https?://\S+             | www\.\S+', '')`                              |
+| 3    | Remove mention/hashtag | `re.sub(r'[@#]\w+', '')`           | Noise media sosial                           |
+| 4    | Normalisasi whitespace | `re.sub(r'\s+', ' ').strip()`      | Newline & spasi ganda → satu spasi          |
 
 ```python
 import re
@@ -758,30 +778,32 @@ df['text_bert'] = df['Content'].apply(preprocess_for_bert)
 
 ### Ringkasan Perbandingan Dua Track
 
-| Aspek | Track A (TF-IDF/BoW) | Track B (IndoBERT) |
-| :--- | :--- | :--- |
-| **Case folding** | ✅ Wajib | 🚫 Dilarang |
-| **Stopword removal** | ✅ Wajib | 🚫 Dilarang |
-| **Stemming** | ✅ Wajib | 🚫 Dilarang |
-| **Tokenisasi manual (NLTK)** | ✅ Digunakan | 🚫 Dilarang |
-| **Remove URL/Mention/HTML** | ✅ Wajib | ✅ Wajib |
-| **Normalisasi whitespace** | ✅ Wajib | ✅ Wajib |
-| **Rare word removal** | ✅ Digunakan | 🚫 Dilarang |
-| **Truncation** | Manual (karakter) | ✅ Via tokenizer (`max_length=512`) |
-| **Output** | `text_clean` | `text_bert` |
-| **File** | `dataset_lpdp_preprocessed.csv` | `dataset_lpdp_preprocessed_bert.csv` |
-| **Status** | ✅ Selesai | ✅ Selesai |
+
+| Aspek                        | Track A (TF-IDF/BoW)            | Track B (IndoBERT)                   |
+| :--------------------------- | :------------------------------ | :----------------------------------- |
+| **Case folding**             | ✅ Wajib                        | 🚫 Dilarang                          |
+| **Stopword removal**         | ✅ Wajib                        | 🚫 Dilarang                          |
+| **Stemming**                 | ✅ Wajib                        | 🚫 Dilarang                          |
+| **Tokenisasi manual (NLTK)** | ✅ Digunakan                    | 🚫 Dilarang                          |
+| **Remove URL/Mention/HTML**  | ✅ Wajib                        | ✅ Wajib                             |
+| **Normalisasi whitespace**   | ✅ Wajib                        | ✅ Wajib                             |
+| **Rare word removal**        | ✅ Digunakan                    | 🚫 Dilarang                          |
+| **Truncation**               | Manual (karakter)               | ✅ Via tokenizer (`max_length=512`)  |
+| **Output**                   | `text_clean`                    | `text_bert`                          |
+| **File**                     | `dataset_lpdp_preprocessed.csv` | `dataset_lpdp_preprocessed_bert.csv` |
+| **Status**                   | ✅ Selesai                      | ✅ Selesai                           |
 
 ### Hasil Aktual Notebook 4 (Final)
 
-| Item | Track A (TF-IDF/BoW) | Track B (IndoBERT) |
-| :--- | :--- | :--- |
-| Input | `output_bertopic/bertopic_4_topik_final.xlsx` (1.038 artikel) | Sama |
-| Output | `dataset_lpdp_preprocessed.csv` | `dataset_lpdp_preprocessed_bert.csv` ✅ |
-| Kolom utama | `text_clean` | `text_bert` |
-| Validasi | 0 NaN, 0 empty string | 0 NaN, 0 empty string |
-| Kamus slang | `slang_id.csv` (114 entri) | Tidak digunakan |
-| Status | ✅ Selesai | ✅ Selesai |
+
+| Item        | Track A (TF-IDF/BoW)                                          | Track B (IndoBERT)                      |
+| :---------- | :------------------------------------------------------------ | :-------------------------------------- |
+| Input       | `output_bertopic/bertopic_4_topik_final.xlsx` (1.038 artikel) | Sama                                    |
+| Output      | `dataset_lpdp_preprocessed.csv`                               | `dataset_lpdp_preprocessed_bert.csv` ✅ |
+| Kolom utama | `text_clean`                                                  | `text_bert`                             |
+| Validasi    | 0 NaN, 0 empty string                                         | 0 NaN, 0 empty string                   |
+| Kamus slang | `slang_id.csv` (114 entri)                                    | Tidak digunakan                         |
+| Status      | ✅ Selesai                                                    | ✅ Selesai                              |
 
 ---
 
@@ -840,13 +862,14 @@ embedding = outputs.last_hidden_state[:, 0, :]  # [CLS] token
 
 ### Perbandingan Pendekatan
 
-| Aspek | TF-IDF | BoW | IndoBERT |
-| :--- | :--- | :--- | :--- |
-| **Kecepatan** | Cepat | Sangat cepat | Lambat (perlu GPU) |
-| **Konteks** | Tidak (bag-of-words) | Tidak | Ya (contextual) |
-| **Interpretability** | Tinggi | Tinggi | Rendah |
-| **Akurasi** | Baik | Cukup | Terbaik |
-| **Cocok untuk** | SVM, LR, NB | Baseline | Fine-tuning / transfer learning |
+
+| Aspek                | TF-IDF               | BoW          | IndoBERT                        |
+| :------------------- | :------------------- | :----------- | :------------------------------ |
+| **Kecepatan**        | Cepat                | Sangat cepat | Lambat (perlu GPU)              |
+| **Konteks**          | Tidak (bag-of-words) | Tidak        | Ya (contextual)                 |
+| **Interpretability** | Tinggi               | Tinggi       | Rendah                          |
+| **Akurasi**          | Baik                 | Cukup        | Terbaik                         |
+| **Cocok untuk**      | SVM, LR, NB          | Baseline     | Fine-tuning / transfer learning |
 
 ---
 
@@ -858,18 +881,20 @@ Mengidentifikasi entitas bernama (**orang, organisasi, lokasi**) dalam setiap ar
 
 ### Library
 
-| Library | Model/Package | Kegunaan |
-| :--- | :--- | :--- |
-| **Transformers** (HuggingFace) | `cahya/bert-base-indonesian-NER` | NER Bahasa Indonesia (BERT-based) |
-| **spaCy** | `en_core_web_sm` | NER Bahasa Inggris + custom `EntityRuler` |
+
+| Library                        | Model/Package                    | Kegunaan                                 |
+| :----------------------------- | :------------------------------- | :--------------------------------------- |
+| **Transformers** (HuggingFace) | `cahya/bert-base-indonesian-NER` | NER Bahasa Indonesia (BERT-based)        |
+| **spaCy**                      | `en_core_web_sm`                 | NER Bahasa Inggris + custom`EntityRuler` |
 
 ### Tipe Entitas (Skema IndoBERT-NER)
 
-| Label | Tipe | Contoh |
-| :--- | :--- | :--- |
-| `PER` | Person | `Jokowi`, `Direktur LPDP`, `Alumni LPDP` |
+
+| Label | Tipe         | Contoh                                             |
+| :---- | :----------- | :------------------------------------------------- |
+| `PER` | Person       | `Jokowi`, `Direktur LPDP`, `Alumni LPDP`           |
 | `ORG` | Organization | `LPDP`, `Kemenkeu`, `Universitas Indonesia`, `MIT` |
-| `LOC` | Location | `Jakarta`, `Indonesia`, `Amerika Serikat` |
+| `LOC` | Location     | `Jakarta`, `Indonesia`, `Amerika Serikat`          |
 
 ### Implementasi
 
@@ -1243,11 +1268,12 @@ print(f"CV F1 (weighted): {scores.mean():.4f} ± {scores.std():.4f}")
 
 ### Tier 1: Baseline Models (Classical ML + TF-IDF)
 
-| Model | Library | Karakteristik |
-| :--- | :--- | :--- |
-| **Multinomial Naive Bayes** | `sklearn.naive_bayes` | Cepat, cocok untuk sparse features, baseline yang solid |
-| **Logistic Regression** | `sklearn.linear_model` | Interpretable, performa stabil, regularization built-in |
-| **Linear SVC** | `sklearn.svm` | Biasanya **terbaik** untuk klasifikasi teks dengan TF-IDF |
+
+| Model                       | Library                | Karakteristik                                            |
+| :-------------------------- | :--------------------- | :------------------------------------------------------- |
+| **Multinomial Naive Bayes** | `sklearn.naive_bayes`  | Cepat, cocok untuk sparse features, baseline yang solid  |
+| **Logistic Regression**     | `sklearn.linear_model` | Interpretable, performa stabil, regularization built-in  |
+| **Linear SVC**              | `sklearn.svm`          | Biasanya**terbaik** untuk klasifikasi teks dengan TF-IDF |
 
 ```python
 from sklearn.naive_bayes import MultinomialNB
@@ -1337,11 +1363,12 @@ Tambahkan ke X_train → training set lebih seimbang
 
 #### Target Augmentasi
 
-| Label | Asli | Target | Perlu Generate |
-| :--- | :---: | :---: | :---: |
-| Positive | 385 | 385 | 0 |
-| Neutral | 342 | 385 | ~43 |
-| Negative | 311 | 385 | ~74 |
+
+| Label    | Asli | Target | Perlu Generate |
+| :------- | :--: | :----: | :------------: |
+| Positive | 385 |  385  |       0       |
+| Neutral  | 342 |  385  |      ~43      |
+| Negative | 311 |  385  |      ~74      |
 
 #### Implementasi
 
@@ -1419,13 +1446,14 @@ print(pd.Series(y_train_augmented).value_counts())
 
 ### Perbandingan Ekspektasi Performa
 
-| Model | Estimasi F1 (weighted) | Waktu Training | Hardware |
-| :--- | :--- | :--- | :--- |
-| Naive Bayes + TF-IDF | 0.65 - 0.75 | Detik | CPU |
-| Logistic Regression + TF-IDF | 0.70 - 0.80 | Detik | CPU |
-| Linear SVC + TF-IDF | 0.72 - 0.82 | Detik | CPU |
-| IndoBERT Fine-Tuned | 0.80 - 0.90 | 30-60 menit | GPU (direkomendasikan) |
-| IndoBERT + RAG Augmentation | 0.82 - 0.92 | 30-60 menit | GPU (direkomendasikan) |
+
+| Model                        | Estimasi F1 (weighted) | Waktu Training | Hardware               |
+| :--------------------------- | :--------------------- | :------------- | :--------------------- |
+| Naive Bayes + TF-IDF         | 0.65 - 0.75            | Detik          | CPU                    |
+| Logistic Regression + TF-IDF | 0.70 - 0.80            | Detik          | CPU                    |
+| Linear SVC + TF-IDF          | 0.72 - 0.82            | Detik          | CPU                    |
+| IndoBERT Fine-Tuned          | 0.80 - 0.90            | 30-60 menit    | GPU (direkomendasikan) |
+| IndoBERT + RAG Augmentation  | 0.82 - 0.92            | 30-60 menit    | GPU (direkomendasikan) |
 
 ---
 
@@ -1433,12 +1461,13 @@ print(pd.Series(y_train_augmented).value_counts())
 
 ### Metrik Utama
 
-| Metrik | Formula | Interpretasi |
-| :--- | :--- | :--- |
-| **Accuracy** | $\frac{TP + TN}{Total}$ | Proporsi prediksi yang benar secara keseluruhan |
-| **Precision** | $\frac{TP}{TP + FP}$ | Dari yang diprediksi kelas X, berapa yang benar? |
-| **Recall** | $\frac{TP}{TP + FN}$ | Dari semua data kelas X, berapa yang terdeteksi? |
-| **F1-Score** | $\frac{2 \times P \times R}{P + R}$ | Harmonic mean antara Precision dan Recall |
+
+| Metrik        | Formula                             | Interpretasi                                     |
+| :------------ | :---------------------------------- | :----------------------------------------------- |
+| **Accuracy**  | $\frac{TP + TN}{Total}$             | Proporsi prediksi yang benar secara keseluruhan  |
+| **Precision** | $\frac{TP}{TP + FP}$                | Dari yang diprediksi kelas X, berapa yang benar? |
+| **Recall**    | $\frac{TP}{TP + FN}$                | Dari semua data kelas X, berapa yang terdeteksi? |
+| **F1-Score**  | $\frac{2 \times P \times R}{P + R}$ | Harmonic mean antara Precision dan Recall        |
 
 ### Kenapa F1-Score Weighted?
 
@@ -1492,11 +1521,12 @@ Baca per kolom: "Dari 55 yang diprediksi Negative, 45 memang benar Negative"
 
 ### Metrik Tambahan
 
-| Metrik | Kegunaan |
-| :--- | :--- |
-| **Macro F1** | Rata-rata F1 semua kelas (tanpa bobot) — sensitif terhadap kelas minoritas |
-| **Cohen's Kappa** | Mengukur agreement di atas chance — lebih informatif dari accuracy untuk multiclass |
-| **ROC-AUC (One-vs-Rest)** | Kemampuan discriminasi model per kelas |
+
+| Metrik                    | Kegunaan                                                                             |
+| :------------------------ | :----------------------------------------------------------------------------------- |
+| **Macro F1**              | Rata-rata F1 semua kelas (tanpa bobot) — sensitif terhadap kelas minoritas          |
+| **Cohen's Kappa**         | Mengukur agreement di atas chance — lebih informatif dari accuracy untuk multiclass |
+| **ROC-AUC (One-vs-Rest)** | Kemampuan discriminasi model per kelas                                               |
 
 ---
 
@@ -1578,47 +1608,51 @@ summary = select_top_sentences(sentence_scores, ratio=0.3)
 
 ### Libraries
 
-| Kategori | Library | Versi |
-| :--- | :--- | :--- |
-| **Scraping** | GNews, newspaper3k, trafilatura | Latest |
-| **Data** | pandas, numpy | Latest |
-| **Preprocessing** | NLTK, Sastrawi, regex | Latest |
-| **Feature Extraction** | scikit-learn (TfidfVectorizer) | Latest |
-| **ML Models** | scikit-learn (SVM, LR, NB) | Latest |
-| **Deep Learning** | transformers, torch | Latest |
-| **Topic Modeling** | BERTopic, sentence-transformers, UMAP, HDBSCAN | Latest |
-| **NER** | spaCy, transformers (cahya/bert-base-indonesian-NER) | Latest |
-| **POS Tagging** | Stanza (Indonesian model) | Latest |
-| **Analisis Sentimen Leksikon** | TextBlob, InSet | Latest |
-| **Visualization** | matplotlib, seaborn, wordcloud | Latest |
+
+| Kategori                       | Library                                              | Versi  |
+| :----------------------------- | :--------------------------------------------------- | :----- |
+| **Scraping**                   | GNews, newspaper3k, trafilatura                      | Latest |
+| **Data**                       | pandas, numpy                                        | Latest |
+| **Preprocessing**              | NLTK, Sastrawi, regex                                | Latest |
+| **Feature Extraction**         | scikit-learn (TfidfVectorizer)                       | Latest |
+| **ML Models**                  | scikit-learn (SVM, LR, NB)                           | Latest |
+| **Deep Learning**              | transformers, torch                                  | Latest |
+| **Topic Modeling**             | BERTopic, sentence-transformers, UMAP, HDBSCAN       | Latest |
+| **NER**                        | spaCy, transformers (cahya/bert-base-indonesian-NER) | Latest |
+| **POS Tagging**                | Stanza (Indonesian model)                            | Latest |
+| **Analisis Sentimen Leksikon** | TextBlob, InSet                                      | Latest |
+| **Visualization**              | matplotlib, seaborn, wordcloud                       | Latest |
 
 ### Pre-trained Models
 
-| Model | Kegunaan | Source |
-| :--- | :--- | :--- |
-| `indobenchmark/indobert-base-p1` | Fine-tuning klasifikasi sentimen | HuggingFace |
-| `cahya/bert-base-indonesian-NER` | Named Entity Recognition Indonesia | HuggingFace |
-| `stanza` (id model) | POS Tagging Bahasa Indonesia | Stanford NLP |
+
+| Model                            | Kegunaan                           | Source       |
+| :------------------------------- | :--------------------------------- | :----------- |
+| `indobenchmark/indobert-base-p1` | Fine-tuning klasifikasi sentimen   | HuggingFace  |
+| `cahya/bert-base-indonesian-NER` | Named Entity Recognition Indonesia | HuggingFace  |
+| `stanza` (id model)              | POS Tagging Bahasa Indonesia       | Stanford NLP |
 
 ### Hardware Requirement
 
-| Task | Minimum | Rekomendasi |
-| :--- | :--- | :--- |
-| Preprocessing + Baseline ML | CPU, 4GB RAM | CPU, 8GB RAM |
-| IndoBERT Fine-Tuning | GPU 4GB VRAM | GPU 8GB+ VRAM (T4/V100) |
+
+| Task                        | Minimum      | Rekomendasi             |
+| :-------------------------- | :----------- | :---------------------- |
+| Preprocessing + Baseline ML | CPU, 4GB RAM | CPU, 8GB RAM            |
+| IndoBERT Fine-Tuning        | GPU 4GB VRAM | GPU 8GB+ VRAM (T4/V100) |
 
 ---
 
 ## Referensi Notebook
 
-| Notebook | Relevansi |
-| :--- | :--- |
-| `Project A/ScrappingArtikelLPDP.ipynb` | Kode scraping 20 keywords |
-| `Week 2/Preprocessing.ipynb` | Pipeline preprocessing 10 langkah |
-| `Week 3/Tugas1C_LPDP_Article_Summarization.ipynb` | Summarization TF-IDF pada artikel LPDP |
-| `Week 4/Tugas1_TFIDF_SentimentClassification.ipynb` | TF-IDF + model klasifikasi sentimen |
-| `Week 6/SentimentAnalysis.ipynb` | Sentiment analysis dengan TextBlob + visualisasi |
-| `Week 6/NER.ipynb` | NER dengan spaCy dan IndoBERT |
-| `Week 6/POSTagging.ipynb` | POS Tagging dengan Stanza (Bahasa Indonesia) |
-| `Week 6/Clustering.ipynb` | KMeans clustering + TF-IDF |
-| `Week 7/Week7_NER_HonestReview.ipynb` | NER pada dataset review Indonesia |
+
+| Notebook                                            | Relevansi                                        |
+| :-------------------------------------------------- | :----------------------------------------------- |
+| `Project A/ScrappingArtikelLPDP.ipynb`              | Kode scraping 20 keywords                        |
+| `Week 2/Preprocessing.ipynb`                        | Pipeline preprocessing 10 langkah                |
+| `Week 3/Tugas1C_LPDP_Article_Summarization.ipynb`   | Summarization TF-IDF pada artikel LPDP           |
+| `Week 4/Tugas1_TFIDF_SentimentClassification.ipynb` | TF-IDF + model klasifikasi sentimen              |
+| `Week 6/SentimentAnalysis.ipynb`                    | Sentiment analysis dengan TextBlob + visualisasi |
+| `Week 6/NER.ipynb`                                  | NER dengan spaCy dan IndoBERT                    |
+| `Week 6/POSTagging.ipynb`                           | POS Tagging dengan Stanza (Bahasa Indonesia)     |
+| `Week 6/Clustering.ipynb`                           | KMeans clustering + TF-IDF                       |
+| `Week 7/Week7_NER_HonestReview.ipynb`               | NER pada dataset review Indonesia                |
