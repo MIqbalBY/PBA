@@ -1,3 +1,12 @@
 __pycache__/
 .env
 .claude/
+
+Project A/model_indobert_finetuned_lpdp/
+Project A/model_indobert*/
+Project A/saved_models/
+Project A/**/checkpoint-*/
+*.safetensors
+*.pt
+*.pth
+*.bin
