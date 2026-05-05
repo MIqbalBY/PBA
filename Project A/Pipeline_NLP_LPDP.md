@@ -209,11 +209,11 @@ flowchart LR
 | 2 | `2. ScrappingKontenLPDP.ipynb` | 🔀 shared | 🔀 shared | 🔀 shared |
 | 3 | `3. TopicModellingLPDP.ipynb` | 🔀 shared | 🔀 shared | 🔀 shared |
 | 4 | `4. PreprocessingLPDP.ipynb` | ✅ heavy (10 step) | ✅ minimal (`preprocess_for_bert`) | — |
-| 5 | `5_FeatureExtraction.ipynb` | ✅ TF-IDF / BoW | 🚫 skip | — |
-| 6 | `6_NER.ipynb` | — | — | ✅ independen |
-| 7 | `7_POSTagging.ipynb` | — | — | ✅ independen |
-| 8 | `8_SentimenLeksikon.ipynb` | ✅ InSet | — | ✅ TextBlob |
-| 9 | `9_TrainTestSplit.ipynb` | ✅ split X_tfidf | ✅ split text_bert | — |
+| 5 | `5. FeatureExtractionLPDP.ipynb` | ✅ TF-IDF / BoW | ✅ IndoBERT [CLS] embeddings | — |
+| 6 | `6. NER_Visualisasi_AnalisisLPDP.ipynb` | — | — | ✅ NER + Visualisasi |
+| 7 | `7. POSTaggingLPDP.ipynb` | — | — | ✅ independen |
+| 8 | `8. TextBlob&LexiconSentimentLPDP.ipynb` | ✅ InSet | — | ✅ TextBlob |
+| 9 | `9. TrainTestSplitLPDP.ipynb` | ✅ split X_tfidf | ✅ split text_bert | — |
 | 10 | `10_ModelTraining.ipynb` | ✅ NB/LR/SVC (Tier 1) | ✅ IndoBERT ft (Tier 2) | — |
 | 11 | `11_Evaluation.ipynb` | ✅ merge hasil | ✅ merge hasil | — |
 | 12 | `12_Visualisasi.ipynb` | ✅ merge hasil | ✅ merge hasil | — |
@@ -262,28 +262,33 @@ flowchart LR
   - [x] Export `dataset_lpdp_preprocessed.csv` (1.038 baris, kolom `text_clean`)
   - [x] **Track B (IndoBERT):** Implementasi pipeline minimal — NO stemming, NO stopword removal, NO lowercase, NO manual tokenization
   - [x] Export `dataset_lpdp_preprocessed_bert.csv` (1.038 baris, kolom `text_bert`)
-- [ ] **Phase 5 — Feature Extraction** (PIC: Salwa)
-  - [ ] TF-IDF vectorization (n-gram)
-  - [ ] Bag of Words baseline
-  - [ ] IndoBERT embeddings ([CLS] token)
-- [ ] **Phase 6 — NER** (PIC: Nida)
-  - [ ] Install transformers + spaCy
-  - [ ] Load `cahya/bert-base-indonesian-NER`
-  - [ ] Ekstrak entitas (PER, ORG, LOC) dari artikel
-  - [ ] Analisis frekuensi entitas per tipe
-- [ ] **Phase 7 — POS Tagging** (PIC: Amel)
-  - [ ] Install Stanza + download model `id` (~500MB)
-  - [ ] POS tagging seluruh artikel dengan Stanza
-  - [ ] Analisis distribusi POS tag (NOUN, VERB, ADJ)
-- [ ] **Phase 8 — Analisis Sentimen Berbasis Leksikon** (PIC: Celine)
-  - [ ] Install TextBlob + download InSet lexicon (positive.tsv, negative.tsv)
-  - [ ] Hitung polarity TextBlob per artikel (Content)
-  - [ ] Hitung skor InSet per artikel (text_clean)
-  - [ ] Evaluasi TextBlob vs label manual
-  - [ ] Evaluasi InSet vs label manual
-- [ ] **Phase 9 — Train/Test Split** (PIC: Iqbal)
-  - [ ] Stratified split 80:20
-  - [ ] Verifikasi distribusi label di train dan test
+- [x] **Phase 5 — Feature Extraction** (PIC: Salwa)
+  - [x] TF-IDF vectorization (n-gram) → `features_extraction/feature_tfidf_ngram.pkl` (1.038 × 5.000)
+  - [x] Bag of Words baseline → `features_extraction/feature_bow.pkl`
+  - [x] IndoBERT embeddings ([CLS] token) → `features_extraction/feature_indobert_embeddings.pkl`
+  - [x] Export metadata → `features_extraction/dataset_with_features_metadata.csv`
+- [x] **Phase 6 — NER & Visualisasi** (PIC: Nida)
+  - [x] Install transformers + spaCy
+  - [x] Load `cahya/bert-base-indonesian-NER`
+  - [x] Ekstrak entitas (PER, ORG, LOC) dari artikel → `output_ner_visualisasi/ner_results.csv`
+  - [x] Analisis frekuensi entitas per tipe → `output_ner_visualisasi/ner_entities_summary.xlsx`
+  - [x] Visualisasi sentimen & topik → 8 file PNG di `output_ner_visualisasi/`
+- [x] **Phase 7 — POS Tagging** (PIC: Amel)
+  - [x] Install Stanza + download model `id` (~500MB)
+  - [x] POS tagging seluruh artikel dengan Stanza → `output_pos_tagging/pos_results.csv`
+  - [x] Analisis distribusi POS tag (NOUN, VERB, ADJ) → `output_pos_tagging/pos_summary.xlsx`
+  - [x] Visualisasi: distribusi POS, heatmap, word cloud → 7 file PNG di `output_pos_tagging/`
+- [x] **Phase 8 — Analisis Sentimen Berbasis Leksikon** (PIC: Celine)
+  - [x] Install TextBlob + download InSet lexicon (`positive.tsv`, `negative.tsv`)
+  - [x] Hitung polarity TextBlob per artikel (Content)
+  - [x] Hitung skor InSet per artikel (`text_clean`)
+  - [x] Evaluasi TextBlob vs label manual
+  - [x] Evaluasi InSet vs label manual
+  - [x] Export hasil → `phase8_hasil_analisis_sentimen.csv` (1.038 baris)
+- [x] **Phase 9 — Train/Test Split** (PIC: Iqbal)
+  - [x] Stratified split 80:20 (`test_size=0.2`, `random_state=42`)
+  - [x] Verifikasi distribusi label di train (830) dan test (208)
+  - [x] Simpan 11 artefak ke `output_split/` (4 CSV, 3 pkl, 1 JSON, 2 PNG)
 - [ ] **Phase 10 — Model Training** (PIC: Salwa)
   - [ ] Tier 1: Naive Bayes, Logistic Regression, Linear SVC
   - [ ] Tier 2: IndoBERT fine-tuning (5 epoch)
@@ -848,6 +853,15 @@ embedding = outputs.last_hidden_state[:, 0, :]  # [CLS] token
 | **Akurasi** | Baik | Cukup | Terbaik |
 | **Cocok untuk** | SVM, LR, NB | Baseline | Fine-tuning / transfer learning |
 
+### Hasil Aktual Notebook 5 (Final)
+
+| Artefak | Deskripsi | Status |
+| :--- | :--- | :--- |
+| `features_extraction/feature_tfidf_ngram.pkl` | Sparse matrix CSR 1.038 × 5.000 (TF-IDF n-gram) + TfidfVectorizer | ✅ Selesai |
+| `features_extraction/feature_bow.pkl` | Sparse matrix CSR 1.038 × n (Bag of Words) + CountVectorizer | ✅ Selesai |
+| `features_extraction/feature_indobert_embeddings.pkl` | Dense matrix 1.038 × 768 (IndoBERT [CLS] token embeddings) | ✅ Selesai |
+| `features_extraction/dataset_with_features_metadata.csv` | Metadata artikel + informasi fitur per track | ✅ Selesai |
+
 ---
 
 ## Phase 6: NER (Named Entity Recognition)
@@ -948,6 +962,22 @@ print(Counter(locs).most_common(20))
 - Tabel frekuensi entitas per tipe (ORG, PER, LOC)
 - Insight: organisasi dan tokoh paling dominan dalam pemberitaan LPDP (input untuk Visualisasi di Phase 12)
 
+### Hasil Aktual Notebook 6 (Final)
+
+| Artefak | Deskripsi | Status |
+| :--- | :--- | :--- |
+| `output_ner_visualisasi/ner_results.csv` | Entitas NER per artikel (PER, ORG, LOC) | ✅ Selesai |
+| `output_ner_visualisasi/ner_entities_summary.xlsx` | Ringkasan frekuensi entitas per tipe | ✅ Selesai |
+| `output_ner_visualisasi/ner_heatmap_ORG_per_topik.png` | Heatmap frekuensi ORG per topik | ✅ Selesai |
+| `output_ner_visualisasi/ner_heatmap_ORG_sentimen.png` | Heatmap ORG vs sentimen | ✅ Selesai |
+| `output_ner_visualisasi/ner_heatmap_PER_sentimen.png` | Heatmap PER vs sentimen | ✅ Selesai |
+| `output_ner_visualisasi/ner_top_entities_per_tipe.png` | Bar chart top entitas per tipe | ✅ Selesai |
+| `output_ner_visualisasi/sentiment_distribusi_overall.png` | Distribusi sentimen keseluruhan | ✅ Selesai |
+| `output_ner_visualisasi/sentiment_per_topik.png` | Sentimen per topik BERTopic | ✅ Selesai |
+| `output_ner_visualisasi/sentiment_trend_bulanan.png` | Tren sentimen bulanan | ✅ Selesai |
+| `output_ner_visualisasi/tfidf_top_terms_per_topik.png` | Top TF-IDF terms per topik | ✅ Selesai |
+| `output_ner_visualisasi/wordcloud_per_topik.png` | Word cloud per topik | ✅ Selesai |
+
 ---
 
 ## Phase 7: POS Tagging (Stanza)
@@ -1022,6 +1052,21 @@ print(Counter(adj_tokens).most_common(20))
 - Kolom `pos_tags`: list (token, POS_label) per artikel
 - Tabel distribusi POS tag (NOUN, VERB, ADJ, PROPN, dll.)
 - Top-20 adjektiva dominan → bahan tambahan untuk Word Cloud di Phase 12
+
+### Hasil Aktual Notebook 7 (Final)
+
+| Artefak | Deskripsi | Status |
+| :--- | :--- | :--- |
+| `output_pos_tagging/pos_results.csv` | POS tag per token per artikel | ✅ Selesai |
+| `output_pos_tagging/pos_summary.xlsx` | Ringkasan distribusi POS tag | ✅ Selesai |
+| `output_pos_tagging/pos_distribusi_overall.png` | Distribusi POS tag keseluruhan | ✅ Selesai |
+| `output_pos_tagging/pos_heatmap_pos_sentimen.png` | Heatmap POS tag vs sentimen | ✅ Selesai |
+| `output_pos_tagging/pos_heatmap_pos_topik.png` | Heatmap POS tag vs topik | ✅ Selesai |
+| `output_pos_tagging/pos_rasio_per_sentimen.png` | Rasio POS tag per kelas sentimen | ✅ Selesai |
+| `output_pos_tagging/pos_rasio_per_topik.png` | Rasio POS tag per topik | ✅ Selesai |
+| `output_pos_tagging/pos_top_adj_per_sentimen.png` | Top adjektiva per sentimen | ✅ Selesai |
+| `output_pos_tagging/pos_top_kata_noun_verb_adj.png` | Top kata NOUN, VERB, ADJ | ✅ Selesai |
+| `output_pos_tagging/pos_wordcloud_noun_verb_adj.png` | Word cloud NOUN/VERB/ADJ | ✅ Selesai |
 
 ---
 
@@ -1174,6 +1219,12 @@ print(comparison)
 - Tabel perbandingan distribusi kedua metode
 - Insight: InSet > TextBlob untuk teks Bahasa Indonesia; keduanya masih di bawah model ML (Phase 10)
 
+### Hasil Aktual Notebook 8 (Final)
+
+| Artefak | Deskripsi | Status |
+| :--- | :--- | :--- |
+| `phase8_hasil_analisis_sentimen.csv` | 1.038 artikel + kolom polarity TextBlob, skor InSet, label prediksi kedua metode, dan label manual | ✅ Selesai |
+
 ---
 
 ## Phase 9: Train/Test Split
@@ -1197,13 +1248,13 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 ```
 
-### Keputusan: Pakai Semua 1.370 Artikel (Tanpa Undersampling)
+### Keputusan: Pakai Semua 1.038 Artikel (Tanpa Undersampling)
 
-Imbalance antar kelas hanya ~7% (selisih Neutral vs Negative) — termasuk kategori **ringan**. Undersampling ke 400×3 = 1.200 akan membuang 169 artikel berlabel yang sudah valid. Tidak worth it.
+Imbalance antar kelas hanya ~7% (selisih Positive vs Negative) — termasuk kategori **ringan**. Undersampling ke 311×3 = 933 artikel akan membuang data valid tanpa manfaat signifikan. Tidak worth it.
 
-**Strategi yang dipilih:** Pakai semua 1.370, evaluasi dengan `f1_weighted` agar bobot tiap kelas proporsional.
+**Strategi yang dipilih:** Pakai semua 1.038 artikel dengan konten dari Phase 8, evaluasi dengan `f1_weighted` agar bobot tiap kelas proporsional.
 
-> Semua 1.370 artikel berlabel terpakai — **1.096 untuk training** (model belajar dari pasangan teks→label) dan **274 untuk testing** (prediksi dibandingkan label asli → F1, accuracy, confusion matrix).
+> Semua 1.038 artikel berhasil di-split — **830 untuk training** (model belajar dari pasangan teks→label) dan **208 untuk testing** (prediksi dibandingkan label asli → F1, accuracy, confusion matrix).
 
 ### Kenapa Stratified?
 
@@ -1211,14 +1262,14 @@ Karena proporsi label sedikit berbeda antar kelas, perlu dijaga konsisten di tra
 
 ```text
 Distribusi sebelum split (data aktual):
-  Neutral  : 506 (36,9%)  →  Train: ~405  |  Test: ~101
-  Positive : 462 (33,7%)  →  Train: ~370  |  Test:  ~92
-  Negative : 402 (29,3%)  →  Train: ~322  |  Test:  ~80
+  Positive : 385 (37,1%)  →  Train:  308  |  Test:  77
+  Neutral  : 342 (32,9%)  →  Train:  273  |  Test:  69
+  Negative : 311 (30,0%)  →  Train:  249  |  Test:  62
   ─────────────────────────────────────────────────
-  Total    : 1.370        →  Train: 1.096  |  Test:  274
+  Total    : 1.038        →  Train:  830  |  Test: 208
 
-Tanpa stratify → Test set bisa kebetulan berisi >40% Neutral → evaluasi misleading
-Dengan stratify → Proporsi 36,9:33,7:29,3 terjaga di train DAN test
+Tanpa stratify → Test set bisa kebetulan berisi >40% Positive → evaluasi misleading
+Dengan stratify → Proporsi 37,1:32,9:30,0 terjaga di train DAN test
 ```
 
 ### Cross-Validation (Opsional tapi Direkomendasikan)
@@ -1236,6 +1287,30 @@ print(f"CV F1 (weighted): {scores.mean():.4f} ± {scores.std():.4f}")
 - Memberikan estimasi performa yang lebih stabil
 - Memanfaatkan semua data training untuk validasi (setiap fold jadi validation set sekali)
 - Mendeteksi apakah model overfit ke split tertentu
+
+### Hasil Aktual Notebook 9 (Final)
+
+Split stratified 80:20 dari 1.038 artikel (output Phase 8):
+
+| Kelas | Full (1.038) | Train (830) | Test (208) |
+| :--- | ---: | ---: | ---: |
+| Positive | 385 (37,1%) | 308 | 77 |
+| Neutral | 342 (32,9%) | 273 | 69 |
+| Negative | 311 (30,0%) | 249 | 62 |
+
+| Artefak | Ukuran | Status |
+| :--- | ---: | :--- |
+| `output_split/track_a_train.csv` | 1.456,2 KB | ✅ Selesai |
+| `output_split/track_a_test.csv` | 361,3 KB | ✅ Selesai |
+| `output_split/track_b_train.csv` | 2.666,5 KB | ✅ Selesai |
+| `output_split/track_b_test.csv` | 657,5 KB | ✅ Selesai |
+| `output_split/X_train_tfidf.pkl` | 2.065,7 KB | ✅ Selesai |
+| `output_split/X_test_tfidf.pkl` | 522,8 KB | ✅ Selesai |
+| `output_split/label_encoder.pkl` | 0,3 KB | ✅ Selesai |
+| `output_split/stratified_kfold.pkl` | 0,1 KB | ✅ Selesai |
+| `output_split/split_metadata.json` | 11,1 KB | ✅ Selesai |
+| `output_split/label_distribution_full.png` | 70,2 KB | ✅ Selesai |
+| `output_split/label_distribution_split.png` | 45,6 KB | ✅ Selesai |
 
 ---
 
